@@ -93,7 +93,7 @@ export function DossierView() {
           <div className="card overflow-hidden">
             <nav
               aria-label="Strony dossier"
-              className="flex gap-1 overflow-x-auto p-2 lg:block lg:max-h-none lg:overflow-x-visible"
+              className="flex gap-1 overflow-x-auto p-2 lg:block lg:max-h-[calc(100vh-12rem)] lg:overflow-y-auto"
             >
               {DOSSIER_GROUPS.map((group) => (
                 <div key={group.group} className="flex shrink-0 gap-1 lg:block">
