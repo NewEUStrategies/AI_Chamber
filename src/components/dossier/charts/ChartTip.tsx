@@ -38,6 +38,7 @@ export function ChartTip({ tip }: { tip: TipState | null }) {
   return createPortal(
     <div ref={ref} className="chart-tip" style={style} role="status">
       {tip.title && <span className="t">{tip.title}</span>}
+      {tip.desc && <span className="d">{tip.desc}</span>}
       {tip.rows.map((r) => (
         <span className="r" key={r.label}>
           {r.color && <i className="dot" style={{ background: r.color }} />}

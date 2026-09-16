@@ -3,6 +3,7 @@ import { plNum } from '@/content/dossier/analytics';
 import { Term } from '@/components/dossier/Term';
 import { useState } from 'react';
 import { INK, SERIES } from './trafficPalette';
+import { Metric } from './Metric';
 import { ChartTip } from './ChartTip';
 import { useChartTip } from './useChartTip';
 
@@ -38,28 +39,42 @@ export function SeoHealth() {
   return (
     <div className="space-y-5">
       <div className="metrics c4">
-        <div className="metric amber">
-          <div className="n">{DOMAIN_HEALTH.authorityScore}</div>
-          <div className="l">
-            <Term k="AS">Authority Score</Term> — skala 0–100
-          </div>
-        </div>
-        <div className="metric">
-          <div className="n">{plNum(DOMAIN_HEALTH.referringDomains)}</div>
-          <div className="l">
+        <Metric
+          cls="amber"
+          n={DOMAIN_HEALTH.authorityScore}
+          l={
+            <>
+              <Term k="AS">Authority Score</Term> — skala 0–100
+            </>
+          }
+          title="Authority Score"
+          info="Zbiorcza miara siły domeny w Semrush: łączy jakość i liczbę linków zwrotnych, ruch organiczny i sygnały spamowe w jedną liczbę od 0 do 100. Dla porównania: dojrzałe izby branżowe mają zwykle 30–50."
+        />
+        <Metric
+          n={plNum(DOMAIN_HEALTH.referringDomains)}
+          l={
             <Term k="domena odsyłająca">domen odsyłających</Term>
-          </div>
-        </div>
-        <div className="metric">
-          <div className="n">{plNum(DOMAIN_HEALTH.backlinks)}</div>
-          <div className="l">
-            <Term k="link zwrotny">linków zwrotnych</Term> ogółem
-          </div>
-        </div>
-        <div className="metric cyan">
-          <div className="n">{plNum(DOMAIN_HEALTH.referringUrls)}</div>
-          <div className="l">odsyłających adresów URL</div>
-        </div>
+          }
+          title="Domeny odsyłające"
+          info="Liczba różnych domen, z których pochodzi przynajmniej jeden link do aichamber.eu. To miara zaplecza linkowego — i niemal w całości składa się z katalogów i profili, nie z mediów."
+        />
+        <Metric
+          n={plNum(DOMAIN_HEALTH.backlinks)}
+          l={
+            <>
+              <Term k="link zwrotny">linków zwrotnych</Term> ogółem
+            </>
+          }
+          title="Linki zwrotne ogółem"
+          info="Łączna liczba odnośników do domeny, licząc wiele linków z tej samej domeny. Niska relacja liczby linków do liczby domen oznacza, że domeny linkują po jednym razie — bez wartościowych powtórzeń."
+        />
+        <Metric
+          cls="cyan"
+          n={plNum(DOMAIN_HEALTH.referringUrls)}
+          l="odsyłających adresów URL"
+          title="Odsyłające adresy URL"
+          info="Liczba konkretnych adresów stron, na których znajduje się link do domeny. Bliska liczbie domen — potwierdza, że linki to pojedyncze wpisy w katalogach, nie umieszczane w treści artykułów."
+        />
       </div>
 
       <div className="card">

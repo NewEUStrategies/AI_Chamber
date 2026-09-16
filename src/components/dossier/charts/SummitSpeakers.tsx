@@ -1,4 +1,5 @@
 import { SUMMIT_SPEAKERS } from '@/content/dossier/analytics';
+import { Metric } from './Metric';
 
 /** Announced speaker line-up of the CEE AI Summit 2026. */
 export function SummitSpeakers() {
@@ -17,18 +18,26 @@ export function SummitSpeakers() {
       </p>
 
       <div className="metrics c3" style={{ marginTop: '16px' }}>
-        <div className="metric amber">
-          <div className="n">{SUMMIT_SPEAKERS.length}</div>
-          <div className="l">zapowiedzianych nazwisk rangi rządowej</div>
-        </div>
-        <div className="metric cyan">
-          <div className="n">{eu.length}</div>
-          <div className="l">przedstawiciel Komisji Europejskiej</div>
-        </div>
-        <div className="metric">
-          <div className="n">{new Set(SUMMIT_SPEAKERS.map((s) => s.country)).size}</div>
-          <div className="l">reprezentowanych krajów i instytucji</div>
-        </div>
+        <Metric
+          cls="amber"
+          n={SUMMIT_SPEAKERS.length}
+          l="zapowiedzianych nazwisk rangi rządowej"
+          title="Nazwiska rangi rządowej"
+          info="Liczba prelegentów na liście z zapowiedzi CEE AI Summit 2026, których funkcja to poziom unijny lub rządowy — nie przedstawiciele firm."
+        />
+        <Metric
+          cls="cyan"
+          n={eu.length}
+          l="przedstawiciel Komisji Europejskiej"
+          title="Przedstawiciele Komisji"
+          info="Prelegenci wprost z instytucji unijnych — nie z krajowych administracji. Obecność Komisji podnosi rangę wydarzenia i sugeruje powiązania z agendą regulacyjną UE."
+        />
+        <Metric
+          n={new Set(SUMMIT_SPEAKERS.map((s) => s.country)).size}
+          l="reprezentowanych krajów i instytucji"
+          title="Kraje i instytucje"
+          info="Liczba różnych państw i organizacji, z których pochodzą zapowiedziani prelegenci. Zasięg ponadnarodowy odróżnia summit od lokalnych konferencji branżowych."
+        />
       </div>
 
       <table className="data" style={{ marginTop: '16px' }}>

@@ -10,6 +10,7 @@ import {
   type SearchTerm,
 } from '@/content/dossier/analytics';
 import { SERIES, plFormat, plPct } from './trafficPalette';
+import { Metric } from './Metric';
 import { ChartTip } from './ChartTip';
 import { useChartTip } from './useChartTip';
 
@@ -122,24 +123,30 @@ export function DomainDetail({ which }: { which: 'chamber' | 'summit' }) {
   return (
     <div className="space-y-5">
       <div className="metrics c4">
-        <div className="metric">
-          <div className="n">{plFormat(d.totalVisits)}</div>
-          <div className="l">wizyt łącznie, III–VIII 2026</div>
-        </div>
-        <div className="metric">
-          <div className="n">{plFormat(d.uniqueVisitors)}</div>
-          <div className="l">unikalnych użytkowników miesięcznie</div>
-        </div>
-        <div className="metric">
-          <div className="n">{d.visitDurationLabel}</div>
-          <div className="l">średni czas wizyty</div>
-        </div>
-        <div className="metric">
-          <div className="n">
-            {d.pagesPerVisit.toLocaleString('pl-PL')}
-          </div>
-          <div className="l">stron na wizytę</div>
-        </div>
+        <Metric
+          n={plFormat(d.totalVisits)}
+          l="wizyt łącznie, III–VIII 2026"
+          title="Wizyty łącznie"
+          info="Suma wizyt z wyszukiwarek i przejść bezpośrednich zmierzona przez SimilarWeb od marca do sierpnia 2026. To górna granica ruchu — nie obejmuje odbiorców newslettera ani LinkedIn."
+        />
+        <Metric
+          n={plFormat(d.uniqueVisitors)}
+          l="unikalnych użytkowników miesięcznie"
+          title="Unikalni użytkownicy"
+          info="Szacunek SimilarWeb: liczba różnych osób odwiedzających domenę w typowym miesiącu tego okresu. Wyliczana z ciasteczek i próbek panelowych, więc jest przybliżeniem, nie licznikiem."
+        />
+        <Metric
+          n={d.visitDurationLabel}
+          l="średni czas wizyty"
+          title="Średni czas wizyty"
+          info="Jak długo przeciętny użytkownik pozostaje na stronie przed wyjściem. Poniżej minuty oznacza, że większość osób nie czyta treści — tylko rzuci okiem i wychodzi."
+        />
+        <Metric
+          n={d.pagesPerVisit.toLocaleString('pl-PL')}
+          l="stron na wizytę"
+          title="Strony na wizytę"
+          info="Średnia liczba podstron obejrzanych podczas jednej wizyty. Wartość blisko jedności oznacza, że użytkownicy trafili na pojedynczą stronę i jej nie opuścili — brak ścieżki po stronie."
+        />
       </div>
 
       <div className="grid2">

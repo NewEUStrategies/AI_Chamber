@@ -2,6 +2,7 @@ import { PL_POSITIONS, SEO_DERIVED } from '@/content/dossier/seo';
 import { plNum } from '@/content/dossier/analytics';
 import { Term } from '@/components/dossier/Term';
 import { SERIES } from './trafficPalette';
+import { Metric } from './Metric';
 import { ChartTip } from './ChartTip';
 import { useChartTip } from './useChartTip';
 
@@ -23,26 +24,36 @@ export function PlPositions() {
   return (
     <div className="space-y-5">
       <div className="metrics c4">
-        <div className="metric amber">
-          <div className="n">7</div>
-          <div className="l">wszystkie frazy z pozycją w Polsce</div>
-        </div>
-        <div className="metric">
-          <div className="n">{SEO_DERIVED.totalPlTraffic}</div>
-          <div className="l">wizyt miesięcznie z tych fraz łącznie</div>
-        </div>
-        <div className="metric cyan">
-          <div className="n">
+        <Metric
+          cls="amber"
+          n="7"
+          l="wszystkie frazy z pozycją w Polsce"
+          title="Frazy z pozycją w Polsce"
+          info="Liczba fraz, na które domena aichamber.eu ma jakąkolwiek pozycję w polskich wynikach wyszukiwania. Dla porównania: dojrzała izba branżowa ma ich setki. Dane z Semrush, odczyt z września 2026."
+        />
+        <Metric
+          n={SEO_DERIVED.totalPlTraffic}
+          l="wizyt miesięcznie z tych fraz łącznie"
+          title="Wizyty z ruchu organicznego"
+          info="Suma wizyt, jakie te frazy przynoszą w typowym miesiącu. Kilka wizyt z siedmiu fraz oznacza, że widoczność organiczna izby jest praktycznie zerowa."
+        />
+        <Metric
+          cls="cyan"
+          n={
             <Term k="wyszukiwania miesięczne">{plNum(SEO_DERIVED.golfVolume)}</Term>
-          </div>
-          <div className="l">miesięcznych wyszukiwań fraz golfowych</div>
-        </div>
-        <div className="metric">
-          <div className="n">
+          }
+          l="miesięcznych wyszukiwań fraz golfowych"
+          title="Wolumen fraz golfowych"
+          info="Łączna liczba wyszukiwań wszystkich fraz związanych z polem golfowym, na które rankuje domena izby. Dominują one w wolumenie — bo to strona miejsca, nie treści o AI."
+        />
+        <Metric
+          n={
             <Term k="wyszukiwania miesięczne">{plNum(SEO_DERIVED.aiVolume)}</Term>
-          </div>
-          <div className="l">miesięcznych wyszukiwań fraz o AI</div>
-        </div>
+          }
+          l="miesięcznych wyszukiwań fraz o AI"
+          title="Wolumen fraz o AI"
+          info="Łączna liczba wyszukiwań fraz o sztucznej inteligencji, na które domena ma pozycję. To miara rzeczywistej widoczności w temacie, którym zajmuje się izba."
+        />
       </div>
 
       <div className="card">

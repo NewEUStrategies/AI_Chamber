@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface TipRow {
   label: string;
@@ -11,16 +11,36 @@ export interface TipState {
   x: number;
   y: number;
   title?: string;
+  /** Optional wrapping explanation shown under the title. */
+  desc?: string;
   rows: TipRow[];
 }
 
-/** Hover state + pointer tracking shared by every dossier chart. */
+/**
+ * Hover state + pointer tracking shared by every dossier chart. While a tip
+ * is visible a window-level pointermove listener keeps its position glued to
+ * the cursor, so charts only need `show` on enter and `hide` on leave.
+ */
 export function useChartTip() {
   const [tip, setTip] = useState<TipState | null>(null);
+  const visible = tip !== null;
+
+  useEffect(() => {
+    if (!visible) return;
+    const move = (e: PointerEvent) =>
+      setTip((t) => (t ? { ...t, x: e.clientX, y: e.clientY } : t));
+    window.addEventListener('pointermove', move);
+    return () => window.removeEventListener('pointermove', move);
+  }, [visible]);
+
   return {
     tip,
-    show: (e: { clientX: number; clientY: number }, rows: TipRow[], title?: string) =>
-      setTip({ x: e.clientX, y: e.clientY, rows, title }),
+    show: (
+      e: { clientX: number; clientY: number },
+      rows: TipRow[],
+      title?: string,
+      desc?: string
+    ) => setTip({ x: e.clientX, y: e.clientY, rows, title, desc }),
     hide: () => setTip(null),
   };
 }
