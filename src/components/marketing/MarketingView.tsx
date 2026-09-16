@@ -1,27 +1,34 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { FUNNEL } from '@/content/marketing/funnel';
+import { ROLES, SEGMENTS } from '@/content/marketing/icp';
+import { ASSETS, CHANNELS, GAPS } from '@/content/marketing/channels';
+import { ROADMAP } from '@/content/marketing/roadmap';
+import { AssetLedger } from './AssetLedger';
+import { ChannelMatrix } from './ChannelMatrix';
 import { FunnelDiagram } from './FunnelDiagram';
+import { IcpMap } from './IcpMap';
+import { RoadmapBoard } from './RoadmapBoard';
 import { Card, StatTile } from './primitives';
 import { SERIES, STATUS } from './palette';
 
-interface Segment {
-  id: string;
-  label: string;
-  render: () => React.ReactNode;
-}
+const SEGMENTS_NAV: { id: string; label: string; render: () => ReactNode }[] = [
+  { id: 'lejek', label: 'Lejek', render: () => <FunnelSegment /> },
+  { id: 'kim', label: 'Kim są i komu sprzedają', render: () => <IcpMap segments={SEGMENTS} roles={ROLES} /> },
+  { id: 'kanaly', label: 'Kanały', render: () => <ChannelMatrix rows={CHANNELS} /> },
+  { id: 'aktywa', label: 'Aktywa i luki', render: () => <AssetsSegment /> },
+  { id: 'roadmapa', label: 'Roadmapa', render: () => <RoadmapBoard horizons={ROADMAP} /> },
+];
 
 /**
  * Marketing cockpit — the diagnostic that replaced the applications table.
  *
- * Segments are tabs rather than one long page because the audience reads them
- * in different sittings: the funnel is the argument, the roadmap is the answer.
+ * Split into segments rather than one long page because they are read in
+ * different sittings: the funnel is the argument, the roadmap is the answer,
+ * and the asset ledger is the part a reviewer will want to challenge.
  */
 export function MarketingView() {
-  const segments: Segment[] = [
-    { id: 'lejek', label: 'Lejek', render: () => <FunnelSegment /> },
-  ];
-  const [active, setActive] = useState(segments[0].id);
-  const current = segments.find((s) => s.id === active) ?? segments[0];
+  const [active, setActive] = useState(SEGMENTS_NAV[0].id);
+  const current = SEGMENTS_NAV.find((s) => s.id === active) ?? SEGMENTS_NAV[0];
 
   return (
     <div className="animate-fade-up">
@@ -30,37 +37,40 @@ export function MarketingView() {
           Kokpit marketingu · AI Chamber CEE
         </p>
         <h1 className="mt-2 max-w-3xl font-display text-[30px] font-extrabold leading-[1.12] text-chamber-navy sm:text-[38px]">
-          Organizacja z realnym kapitałem politycznym i lejkiem, którego nikt nie zbudował
+          Realny kapitał polityczny i lejek, którego nikt nie zbudował
         </h1>
         <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
-          Diagnoza marketingu izby na podstawie danych zebranych w dossier: ruchu obu domen,
-          profilu wyszukiwarkowego i siedemdziesięciu zrzutów obu kanałów społecznościowych.
-          Tam, gdzie z zewnątrz nie da się nic ustalić, jest napisane „nieznane" — a nie
-          domysł podany jako wniosek.
+          Diagnoza marketingu izby oparta na danych z dossier: ruchu obu domen, profilu
+          wyszukiwarkowego i siedemdziesięciu zrzutów obu kanałów społecznościowych. Tam, gdzie
+          z zewnątrz nie da się nic ustalić, napisane jest <b>nieznane</b> — zamiast domysłu
+          podanego jako wniosek. Ocen nie naciągam w żadną stronę: to, co działa, jest tu
+          nazwane równie wyraźnie jak to, co nie działa.
         </p>
       </header>
 
-      {segments.length > 1 && (
-        <nav className="mb-6 flex flex-wrap gap-1.5" role="tablist">
-          {segments.map((s) => (
-            <button
-              key={s.id}
-              role="tab"
-              aria-selected={active === s.id}
-              onClick={() => setActive(s.id)}
-              className={`rounded-full px-4 py-1.5 text-[13px] font-bold transition-colors ${
-                active === s.id
-                  ? 'bg-chamber-navy text-white'
-                  : 'border border-slate-200 text-chamber-navy hover:bg-slate-50'
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </nav>
-      )}
+      <nav className="mb-6 flex flex-wrap gap-1.5" role="tablist" aria-label="Segmenty analizy">
+        {SEGMENTS_NAV.map((s) => (
+          <button
+            key={s.id}
+            role="tab"
+            id={`tab-${s.id}`}
+            aria-selected={active === s.id}
+            aria-controls={`panel-${s.id}`}
+            onClick={() => setActive(s.id)}
+            className={`rounded-full px-4 py-1.5 text-[13px] font-bold transition-colors ${
+              active === s.id
+                ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
+                : 'border border-slate-200 text-chamber-navy hover:bg-slate-50'
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </nav>
 
-      <div role="tabpanel">{current.render()}</div>
+      <div role="tabpanel" id={`panel-${current.id}`} aria-labelledby={`tab-${current.id}`}>
+        {current.render()}
+      </div>
     </div>
   );
 }
@@ -79,25 +89,32 @@ function FunnelSegment() {
       <Card
         kicker="Diagnoza"
         title="Lejek etap po etapie"
-        lead={
-          <>
-            Cztery etapy, od zasięgu po utrzymanie członka. Kliknij pasmo, żeby zobaczyć, co na
-            danym etapie istnieje, czego brakuje i na jakim dowodzie oparta jest ocena.
-          </>
-        }
+        lead="Cztery etapy, od zasięgu po utrzymanie członka. Kliknij pasmo, żeby zobaczyć, co na danym etapie istnieje, czego brakuje i na jakim dowodzie oparta jest ocena."
         note={
           <>
             <b className="text-slate-600">Jak czytać szerokość pasm:</b> koduje ocenę siły etapu,
-            <b> nie</b> zmierzony spadek konwersji. Bez dostępu do analityki przejścia między
-            etapami są nieobserwowalne — narysowanie zwężającego się stożka sugerowałoby pomiar,
-            którego nie ma. Dwa etapy oznaczone jako{' '}
-            <span style={{ color: STATUS.nieznane.fill }} className="font-bold">nieznane</span>{' '}
-            to uczciwa odpowiedź, nie ocena negatywna.
+            <b> nie</b> zmierzony spadek konwersji. Bez dostępu do analityki przejścia między etapami
+            są nieobserwowalne — narysowanie zwężającego się stożka sugerowałoby pomiar, którego nie
+            ma. Dwa etapy oznaczone jako{' '}
+            <span style={{ color: STATUS.nieznane.fill }} className="font-bold">nieznane</span> to
+            uczciwa odpowiedź, nie ocena negatywna.
           </>
         }
       >
         <FunnelDiagram stages={FUNNEL} />
       </Card>
     </div>
+  );
+}
+
+function AssetsSegment() {
+  return (
+    <Card
+      kicker="Inwentarz"
+      title="Lead magnety i aktywa treściowe"
+      lead="Co istnieje, co przechwytuje kontakt, a czego nie ma wcale. Pod spodem lista tego, czego nie da się ustalić bez dostępu do panelu — z kosztem zdobycia każdej odpowiedzi."
+    >
+      <AssetLedger assets={ASSETS} gaps={GAPS} />
+    </Card>
   );
 }
