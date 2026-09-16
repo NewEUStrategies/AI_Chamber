@@ -9,7 +9,7 @@ export const ROADMAP: Horizon[] = [
   {
     key: '0-30',
     label: 'Pierwsze 30 dni',
-    frame: 'Wyłącznie to, co nowa osoba zrobi sama, bez budżetu i bez zgody zarządu. Cel: przestać zgadywać.',
+    frame: 'To, co nowa osoba dowozi sama, w ramach bieżącego budżetu i uzgodnionego zakresu. Cel: przestać zgadywać.',
     items: [
       {
         title: 'Podpiąć analitykę i Search Console',

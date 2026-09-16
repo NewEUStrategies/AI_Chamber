@@ -126,7 +126,7 @@ export function QuoteCardTab() {
         <Panel
           kicker="Protokół amplifikacji"
           title="Co jedzie do prelegenta dobę przed publikacją"
-          lead="Dziś izba publikuje i liczy na dobrą wolę. Różnica w zasięgu między tym a wysłanym pakietem jest rzędu wielkości."
+          lead="Tagowany podmiot, który dostaje gotowy materiał, podaje dalej znacznie częściej niż ten, który ma sobie coś sam wyciąć. Czy taki pakiet dziś wychodzi, z zewnątrz nie widać."
         >
           <ul className="space-y-2.5">
             {[
@@ -153,9 +153,9 @@ export function QuoteCardTab() {
           title="Próg publikacji"
           note={
             <>
-              Reguła szybkości: karta cytatowa z sali nie przechodzi przez akceptację zarządu.
-              Zatwierdzeniu podlega stanowisko, cytat imienny i liczba — nie post. Organizacja, w której
-              relacja czeka na akceptację, przegrywa z organizacją publikującą w godzinę.
+              Karta cytatowa mieści się w zakresie uzgodnionym z zarządem przed wydarzeniem, więc
+              w dniu zero nie czeka na osobną decyzję. Pojedynczo zatwierdzane zostaje to, co wiąże izbę
+              na zewnątrz: stanowisko, cytat imienny i liczba.
             </>
           }
         >

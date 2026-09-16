@@ -4,6 +4,7 @@ import {
   EMAIL_ORDER,
   EMAIL_WATCH,
   HYGIENE,
+  LIST_QUESTION,
   LIST_SOURCES,
   MAIL_GATE,
   POLICY_BRIEF,
@@ -32,7 +33,7 @@ export function EmailPanel() {
     <div className="space-y-5">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile label="Sekwencji cyklu życia" value={String(SEQUENCES.length)} sub={`${TOTAL_MAILS} maili łącznie, wszystkie wyzwalane zdarzeniem`} accent={PLAN_ACCENT} />
-        <StatTile label="Źródeł zapisów do spięcia" value={String(LIST_SOURCES.length)} sub={LIST_SOURCES.join(' · ')} accent={PLAN_ACCENT} />
+        <StatTile label="Wejść z własnym formularzem" value={String(LIST_SOURCES.length)} sub={LIST_SOURCES.join(' · ')} accent={PLAN_ACCENT} />
         <StatTile label="Wymiarów segmentacji" value={String(SEGMENTS.length)} sub="kraj, wielkość, branża, status" accent={PLAN_ACCENT} />
         <StatTile label="Nieodnowień z braku zaangażowania" value="52%" sub="nie z ceny — dlatego onboarding jest sekwencją pierwszą" tone="bad" />
       </div>
@@ -49,7 +50,7 @@ export function EmailPanel() {
         <Panel
           kicker="Warunek wstępny"
           title="Higiena techniczna"
-          lead="Bez tego reszta nie dociera. To nie jest lista dobrych praktyk — to jest lista powodów, dla których najlepiej napisany briefing ląduje w spamie."
+          lead="Warunek wstępny całej reszty — i jedyna pozycja, którą w części da się sprawdzić bez niczyjej pomocy: rekordy SPF i DMARC są publiczne w DNS. Reszta wymaga jednego pytania do osoby obsługującej wysyłkę."
         >
           <ul className="space-y-2.5">
             {HYGIENE.map((h) => (
@@ -68,7 +69,7 @@ export function EmailPanel() {
           <Panel
             kicker="Jedna lista"
             title="Cztery źródła, jeden system"
-            lead="Zapisy z webinarów, z formularza członkowskiego, z wydarzeń i z newslettera żyją dziś osobno. Dopóki żyją osobno, segmentacja jest niewykonalna."
+            lead="Cztery wejścia mają cztery osobne formularze. Co jest pod spodem, z zewnątrz nie widać — kontakty mogą już schodzić się w CRM-ie albo w CRM-ie i narzędziu do wysyłki. Od odpowiedzi zależy, czy to praca nad integracją, czy już tylko nad segmentacją."
           >
             {/* Four inputs converging on one store. The picture is the whole
                 task: nothing here is a funnel, it is a merge. */}
@@ -93,6 +94,12 @@ export function EmailPanel() {
               >
                 jedna lista z segmentacją
               </div>
+
+            {/* The question, not the verdict: the picture above is what we want,
+                not what we claim is missing. */}
+            <p className="mt-3 rounded-[8px] px-3 py-2.5 text-[12px] leading-[1.6] text-slate-600" style={{ background: INK.track }}>
+              <b className="text-chamber-navy">Pytanie do zadania:</b> {LIST_QUESTION}
+            </p>
             </div>
 
             <dl className="mt-5 space-y-2.5 border-t border-slate-100 pt-4">

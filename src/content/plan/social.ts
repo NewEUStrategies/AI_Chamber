@@ -60,9 +60,9 @@ export const CHANNEL_DECISIONS: ChannelDecision[] = [
     key: 'people',
     channel: 'Profile osobiste',
     verdict: 'Dziewięć sieci do dystrybucji. Bez tej kaskady ekspansja regionalna nie ma nośnika.',
-    status: 'brak',
+    status: 'nieznane',
     body:
-      'Strona firmowa ma strukturalnie niższy zasięg niż profil człowieka. Do dystrybucji wchodzi dziewięć sieci: zarząd, dyrektorzy i czworo doradców-byłych ministrów.',
+      'Strona firmowa ma strukturalnie niższy zasięg niż profil człowieka. Do dystrybucji wchodzi dziewięć sieci: zarząd, dyrektorzy i czworo doradców-byłych ministrów. Ile z nich podaje dziś dalej, rozpoznanie nie sprawdzało — czytało stronę firmową, nie prywatne profile.',
     actions: [
       'Cztery z tych sieci są zagraniczne — czyli dokładnie tam, gdzie baza członkowska jest symboliczna.',
       'Każdy post strony kaskaduje się przez profile, każdy z własnym jednozdaniowym komentarzem.',
@@ -274,7 +274,7 @@ export const AMPLIFICATION = {
     'Bezpośredni link.',
   ],
   why:
-    'Dziś izba publikuje i liczy na dobrą wolę — to jest różnica rzędu wielkości w zasięgu. Przy konferencji pakiet idzie do wszystkich prelegentów, partnerów i sygnatariuszy deklaracji.',
+    'Tagowany podmiot, który dostaje gotowy materiał, podaje dalej znacznie częściej niż ten, który ma sobie coś sam wyciąć. Czy taki pakiet dziś wychodzi, z zewnątrz nie widać — jeśli nie, jest to jedna z tańszych zmian w całym planie. Przy konferencji idzie do wszystkich prelegentów, partnerów i sygnatariuszy deklaracji.',
 };
 
 /** Publication cascade, in hours. The page draws it on a clock. */

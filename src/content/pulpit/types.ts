@@ -41,6 +41,14 @@ export interface Entry {
   /** 1–5, assessed. Nothing here promises a number the chamber cannot measure. */
   impact: number;
   horizon: Horizon;
+  /**
+   * How to settle a `nieznane` row, and what it costs to find out.
+   *
+   * A register that says "we cannot tell from outside" and stops there is half
+   * an answer. Most of these resolve in one question or one DNS lookup, and
+   * saying which turns an admission into the first item of the agenda.
+   */
+  howToCheck?: string;
   /** Where the recommendation is worked out in full. */
   to: Route;
   toLabel: string;
