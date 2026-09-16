@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
-import { BookText, LayoutDashboard, Megaphone, TriangleAlert, LoaderCircle } from 'lucide-react';
+import { BookText, LayoutDashboard, TriangleAlert, LoaderCircle } from 'lucide-react';
 import type { ApplicationStatus, MembershipApplication } from '@/lib/types';
 import { fetchApplications, updateApplication, deleteApplication } from '@/lib/applications';
 import { ChamberLogo } from '@/components/ChamberLogo';
@@ -11,12 +11,7 @@ const DossierView = lazy(() =>
   import('@/components/dossier/DossierView').then((m) => ({ default: m.DossierView }))
 );
 
-// The marketing cockpit carries its own charts; keep it out of the initial bundle too.
-const MarketingView = lazy(() =>
-  import('@/components/marketing/MarketingView').then((m) => ({ default: m.MarketingView }))
-);
-
-type View = 'dashboard' | 'marketing' | 'dossier';
+type View = 'dashboard' | 'dossier';
 
 export default function App() {
   const [view, setView] = useState<View>('dashboard');
@@ -81,7 +76,6 @@ export default function App() {
 
   const nav: { key: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'dashboard', label: 'Pulpit', icon: LayoutDashboard },
-    { key: 'marketing', label: 'Marketing', icon: Megaphone },
     { key: 'dossier', label: 'Dossier', icon: BookText },
   ];
 
@@ -112,7 +106,7 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        {error && view === 'dashboard' && (
+        {error && view !== 'dossier' && (
           <div className="card mb-6 flex items-start gap-3 border-rose-200 bg-rose-50 p-4">
             <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />
             <div className="flex-1">
@@ -129,10 +123,6 @@ export default function App() {
           <Suspense fallback={<ViewLoader label="Ładowanie dossier…" />}>
             <DossierView />
           </Suspense>
-        ) : view === 'marketing' ? (
-          <Suspense fallback={<ViewLoader label="Ładowanie kokpitu…" />}>
-            <MarketingView />
-          </Suspense>
         ) : loading ? (
           <ViewLoader label="Ładowanie danych rekrutacji…" />
         ) : apps.length === 0 && !error ? (
@@ -142,14 +132,14 @@ export default function App() {
               Gdy pojawią się zgłoszenia firm, pojawią się tutaj automatycznie.
             </p>
           </div>
-        ) : (
+        ) : view === 'dashboard' ? (
           <DashboardView
             apps={apps}
             onSelect={(a) => {
               setSelected(a);
             }}
           />
-        )}
+        ) : null}
       </main>
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs font-semibold text-slate-400">
