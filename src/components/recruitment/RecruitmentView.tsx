@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { BookMarked, ExternalLink } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type FormEvent } from 'react';
+import { BookMarked, ExternalLink, Lock, X } from 'lucide-react';
 import { DossierBlocks } from '@/components/dossier/DossierBlocks';
 import { DossierHtml } from '@/components/dossier/DossierHtml';
 import { useTermTooltipPositioning } from '@/components/dossier/useTermTooltipPositioning';
@@ -40,6 +40,8 @@ export function RecruitmentView({
       : RECRUITMENT_PAGES[0].id
   );
   const [unlocked, setUnlocked] = useState(false);
+  const [gate, setGate] = useState<{ tab: string; error: boolean } | null>(null);
+  const gateInputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const firstPaint = useRef(true);
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -90,10 +92,9 @@ export function RecruitmentView({
   }, [active]);
 
   const selectTab = (next: string) => {
-    if (RESTRICTED_TABS.has(next) && !unlocked) {
-      const password = window.prompt('Ta strona jest chroniona. Podaj hasło:');
-      if (password !== RECRUITMENT_PASSWORD) return;
-      setUnlocked(true);
+    if (RESTRICTED_TABS.has(next as RecruitmentTab) && !unlocked) {
+      setGate({ tab: next, error: false });
+      return;
     }
     setActive(next);
   };
@@ -110,6 +111,27 @@ export function RecruitmentView({
     selectTab(ids[next]);
     refs.current[ids[next]]?.focus();
   };
+
+  useEffect(() => {
+    if (!gate) return;
+    gateInputRef.current?.focus();
+  }, [gate]);
+
+  const submitGate = (e: FormEvent) => {
+    e.preventDefault();
+    const input = gateInputRef.current;
+    if (!input || !gate) return;
+    if (input.value === RECRUITMENT_PASSWORD) {
+      setUnlocked(true);
+      setActive(gate.tab);
+      setGate(null);
+    } else {
+      setGate({ ...gate, error: true });
+      input.select();
+    }
+  };
+
+  const closeGate = () => setGate(null);
 
   return (
     <div className="dossier animate-fade-up">
@@ -208,6 +230,58 @@ export function RecruitmentView({
           </button>
         </p>
       </div>
+
+      {gate && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 backdrop-blur-sm"
+          onClick={closeGate}
+        >
+          <div
+            className="w-full max-w-sm overflow-hidden rounded-[16px] border border-slate-200 bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
+              <h3 className="flex items-center gap-2 font-display text-[15px] font-extrabold text-chamber-navy">
+                <Lock aria-hidden className="h-4 w-4 text-chamber-green-deep" />
+                Strona chroniona
+              </h3>
+              <button
+                type="button"
+                onClick={closeGate}
+                aria-label="Zamknij"
+                className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X aria-hidden className="h-4 w-4" />
+              </button>
+            </div>
+            <form onSubmit={submitGate} className="space-y-3 px-5 py-4">
+              <p className="text-[13px] leading-relaxed text-slate-600">
+                Ta część materiałów rekrutacyjnych jest dostępna po podaniu hasła.
+              </p>
+              <input
+                ref={gateInputRef}
+                type="password"
+                autoComplete="off"
+                placeholder="Wpisz hasło"
+                className={`w-full rounded-[8px] border px-3.5 py-2.5 text-[14px] font-semibold text-chamber-navy outline-none transition-colors ${
+                  gate.error
+                    ? 'border-rose-300 bg-rose-50 focus:border-rose-400'
+                    : 'border-slate-200 focus:border-chamber-navy'
+                }`}
+              />
+              {gate.error && (
+                <p className="text-[12px] font-semibold text-rose-500">Nieprawidłowe hasło. Spróbuj ponownie.</p>
+              )}
+              <button
+                type="submit"
+                className="w-full rounded-[8px] bg-chamber-navy px-4 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-chamber-navy/90"
+              >
+                Odblokuj
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
