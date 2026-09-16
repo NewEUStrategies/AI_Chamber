@@ -343,7 +343,7 @@ function Salaries() {
  * ---------------------------------------------------------------- */
 
 const VERDICT_TONE: Record<string, string> = {
-  'kompetencja, nie etat': CAT[2],
+  'kompetencja, nie stanowisko': CAT[2],
   'najbliżej potrzeb izby': CAT[1],
   'nie w izbie': INK.muted,
   'nie dotyczy': INK.dim,

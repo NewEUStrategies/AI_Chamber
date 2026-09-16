@@ -97,7 +97,7 @@ export const SPECIALIST_ROLES: SpecialistRole[] = [
     what: 'Wdraża i optymalizuje narzędzia AI: strategie treści z użyciem dużych modeli, personalizacja, automatyzacja analityki.',
     verdict:
       'W izbie nie ma uzasadnienia dla osobnego etatu, ale jest dla wpisania tej kompetencji do kart managera i starszego specjalisty. Brak kompetencji AI-native obniża widełki o 20–30 procent, więc premia za ich posiadanie to realnie 10–20 procent nad widełki bazowe.',
-    verdictLabel: 'kompetencja, nie etat',
+    verdictLabel: 'kompetencja, nie stanowisko',
     goesInto: 'Manager i starszy specjalista',
   },
   {

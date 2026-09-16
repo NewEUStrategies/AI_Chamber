@@ -84,7 +84,7 @@ export interface SpecialistRole {
   band: [number, number];
   what: string;
   verdict: string;
-  verdictLabel: 'kompetencja, nie etat' | 'nie w izbie' | 'najbliżej potrzeb izby' | 'nie dotyczy';
+  verdictLabel: 'kompetencja, nie stanowisko' | 'nie w izbie' | 'najbliżej potrzeb izby' | 'nie dotyczy';
   goesInto: string;
 }
 
