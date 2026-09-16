@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, BookMarked, CornerUpLeft } from 'lucide-react';
 import { DOSSIER_GROUPS, DOSSIER_PAGES } from '@/content/dossier';
 import { DossierBlocks } from '@/components/dossier/DossierBlocks';
 import { DossierHtml } from '@/components/dossier/DossierHtml';
+import { useTermTooltipPositioning } from '@/components/dossier/useTermTooltipPositioning';
 
 const SOURCES_PAGE = 'zrodla';
 const HIGHLIGHT_MS = 3200;
@@ -13,6 +14,7 @@ export function DossierView() {
   const [returnTo, setReturnTo] = useState<string | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const firstPaint = useRef(true);
+  useTermTooltipPositioning();
 
   const index = Math.max(0, DOSSIER_PAGES.findIndex((p) => p.id === pageId));
   const page = DOSSIER_PAGES[index];
