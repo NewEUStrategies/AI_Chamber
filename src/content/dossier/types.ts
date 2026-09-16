@@ -15,7 +15,13 @@ export type DossierComponent =
   | 'domain-flow'
   | 'domain-detail-chamber'
   | 'domain-detail-summit'
-  | 'summit-speakers';
+  | 'summit-speakers'
+  | 'seo-health'
+  | 'link-quality'
+  | 'anchor-profile'
+  | 'pl-positions'
+  | 'ai-prompts'
+  | 'glossary-panel';
 
 export interface DossierTab {
   id: string;
