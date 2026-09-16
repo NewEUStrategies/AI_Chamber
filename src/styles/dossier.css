@@ -793,3 +793,137 @@
     min-width: 96px;
   }
 }
+
+/* ---------- abbreviation tooltips (glossary) ---------- */
+.dossier .term {
+  position: relative;
+  display: inline;
+  font-weight: 700;
+  color: #293277;
+  cursor: help;
+  outline: none;
+  border-bottom: 1px dotted rgba(0, 135, 93, 0.7);
+  text-underline-offset: 2px;
+}
+.dossier .term::after {
+  content: '\24D8';
+  font-size: 0.72em;
+  color: #00875d;
+  margin-left: 2px;
+  vertical-align: super;
+  line-height: 0;
+}
+.dossier .term:hover,
+.dossier .term:focus-visible {
+  background: rgba(1, 222, 153, 0.18);
+  border-bottom-color: #00875d;
+  border-radius: 3px;
+}
+.dossier .term .tt {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  width: min(340px, 76vw);
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--d-radius);
+  padding: 13px 15px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: #475569;
+  line-height: 1.6;
+  text-align: left;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  box-shadow: 0 2px 4px rgba(20, 26, 61, 0.06), 0 16px 40px rgba(20, 26, 61, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.16s, transform 0.16s;
+  z-index: 320;
+  pointer-events: none;
+}
+.dossier .term .tt b {
+  display: block;
+  color: #293277;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.dossier .term .tt .sc,
+.dossier .term .tt .rd {
+  display: block;
+  margin-top: 7px;
+  font-size: 11.5px;
+}
+.dossier .term .tt .sc {
+  color: #00875d;
+  font-weight: 700;
+}
+.dossier .term .tt .rd {
+  color: #64748b;
+  font-style: italic;
+}
+.dossier .term:hover .tt,
+.dossier .term:focus .tt {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.dossier .term .tt::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: #e2e8f0;
+}
+@media (max-width: 1023px) {
+  .dossier .term .tt {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 12px;
+    top: auto;
+    width: auto;
+    transform: translateY(10px);
+  }
+  .dossier .term:hover .tt,
+  .dossier .term:focus .tt { transform: translateY(0); }
+  .dossier .term .tt::before { display: none; }
+}
+
+/* glossary list */
+.dossier .gloss { display: grid; gap: 2px; }
+.dossier .gloss .row {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.dossier .gloss .row:last-child { border-bottom: none; }
+.dossier .gloss .k {
+  font-weight: 800;
+  color: #293277;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.dossier .gloss .k small {
+  display: block;
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #00875d;
+  margin-top: 2px;
+}
+.dossier .gloss .d { font-size: 13px; color: #475569; line-height: 1.6; }
+.dossier .gloss .d .sc { display: block; margin-top: 5px; font-size: 11.5px; font-weight: 700; color: #00875d; }
+.dossier .gloss .d .rd { display: block; margin-top: 4px; font-size: 11.5px; font-style: italic; color: #64748b; }
+@media (max-width: 767px) {
+  .dossier .gloss .row { grid-template-columns: 1fr; gap: 4px; }
+}

@@ -1,3 +1,4 @@
+import { SEO_PAGES } from './pages-seo';
 import { TRAFFIC_PAGES } from './pages-traffic';
 import type { DossierBlock, DossierPage } from './types';
 
@@ -141,7 +142,12 @@ const NEW_ENTRIES = `${ENTRY_34}
           <span class="g">Dane o ruchu w sieci</span>
           <div class="i" id="zrodlo-37" data-src="37"><span class="n">37.</span><span class="t">SimilarWeb, „Website Analysis: aichamber.eu”, raport za okres marzec-sierpień 2026, odczyt 16 września 2026 r. - ruch, zaangażowanie, kanały pozyskania, geografia i wyszukiwarka. <em>M2</em></span></div>
           <div class="i" id="zrodlo-38" data-src="38"><span class="n">38.</span><span class="t">SimilarWeb, „Website Analysis: ceeaisummit.eu”, raport za okres marzec-sierpień 2026, odczyt 16 września 2026 r. - ruch, zaangażowanie, kanały pozyskania, geografia i wyszukiwarka. <em>M2</em></span></div>
-          <div class="i" id="zrodlo-39" data-src="39"><span class="n">39.</span><span class="t">ceeaisummit.eu, zapowiedź prelegentów CEE AI Summit 2026 - odczyt z podglądu strony zamieszczonego w raporcie SimilarWeb, sierpień 2026 r. <em>M2</em></span></div>`;
+          <div class="i" id="zrodlo-39" data-src="39"><span class="n">39.</span><span class="t">ceeaisummit.eu, zapowiedź prelegentów CEE AI Summit 2026 - odczyt z podglądu strony zamieszczonego w raporcie SimilarWeb, sierpień 2026 r. <em>M2</em></span></div>
+          <span class="g">Widoczność w wyszukiwarce</span>
+          <div class="i" id="zrodlo-40" data-src="40"><span class="n">40.</span><span class="t">Semrush, „Linki zwrotne: Przegląd”, aichamber.eu, domena główna, eksport z 16 września 2026 r. - Authority Score, domeny odsyłające, atrybuty i typy linków, rozkład Authority Score domen odsyłających, rozkład końcówek domen, kraje oraz anchory z datami pierwszego i ostatniego wystąpienia. <em>M2</em></span></div>
+          <div class="i" id="zrodlo-41" data-src="41"><span class="n">41.</span><span class="t">Semrush, „Lista linków zwrotnych”, aichamber.eu, eksport stu pozycji z 16 września 2026 r. - adresy stron linkujących, anchory, atrybuty i Authority Score poszczególnych podstron. <em>M2</em></span></div>
+          <div class="i" id="zrodlo-42" data-src="42"><span class="n">42.</span><span class="t">Semrush, „Pozycje organiczne”, aichamber.eu, baza danych Polska, odczyt panelu z 16 września 2026 r. - siedem fraz z pozycją, wolumeny, trudność i adresy docelowe. <em>M2</em></span></div>
+          <div class="i" id="zrodlo-43" data-src="43"><span class="n">43.</span><span class="t">Answer the Public, prompty AI dla aichamber.eu, język polski, Polska, eksport z 16 września 2026 r. - dwadzieścia pięć zapytań przypisanych do ChatGPT i Gemini wraz z klasyfikacją intencji. <em>M2</em></span></div>`;
 
 /* ------------------------------------------------------------------ */
 
@@ -308,7 +314,7 @@ export const DOSSIER_PATCHES: DossierPatch[] = [
     pageId: 'zrodla',
     find: 'Trzydzieści cztery pozycje w zapisie chicagowskim, ponumerowane na stałe i pogrupowane według rodzaju źródła.',
     replace:
-      'Trzydzieści dziewięć pozycji w zapisie chicagowskim, ponumerowanych na stałe i pogrupowanych według rodzaju źródła.',
+      'Czterdzieści trzy pozycje w zapisie chicagowskim, ponumerowanych na stałe i pogrupowanych według rodzaju źródła.',
     reason: 'Dopisane pozycje 35 i 36.',
   },
   {
@@ -383,5 +389,5 @@ export function applyOverlays(pages: DossierPage[]): DossierPage[] {
     return { ...patched, blocks };
   });
   // Hand-written pages that were never part of the source document.
-  return [...patched, ...TRAFFIC_PAGES];
+  return [...patched, ...TRAFFIC_PAGES, ...SEO_PAGES];
 }

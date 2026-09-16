@@ -1,0 +1,45 @@
+import { GLOSSARY } from './seo';
+
+/**
+ * Markup for an abbreviation with an explanatory tooltip.
+ *
+ * Mirrors the footnote mechanism: pure CSS, opens on hover and on keyboard
+ * focus, so every abbreviation on the page can be read without leaving it.
+ * Styling lives in `src/styles/dossier.css` under `.term`.
+ */
+export function g(key: keyof typeof GLOSSARY | string, label?: string): string {
+  const entry = GLOSSARY[key];
+  if (!entry) return label ?? String(key);
+  const shown = label ?? String(key);
+  const parts = [`<b>${entry.full}</b>`, entry.body];
+  if (entry.scale) parts.push(`<span class="sc">Skala: ${entry.scale}</span>`);
+  if (entry.reading) parts.push(`<span class="rd">${entry.reading}</span>`);
+  return (
+    `<span class="term" tabindex="0" role="note" aria-label="${entry.full} — wyjaśnienie">` +
+    `${shown}<span class="tt">${parts.join(' ')}</span></span>`
+  );
+}
+
+/** Every abbreviation used on the page, for the glossary tab. */
+export const GLOSSARY_ORDER: string[] = [
+  'AS',
+  'Page AS',
+  'DR',
+  'domena odsyłająca',
+  'link zwrotny',
+  'follow',
+  'nofollow',
+  'UGC',
+  'link sponsorowany',
+  'anchor',
+  'TLD',
+  'PBN',
+  'disavow',
+  'negatywne SEO',
+  'ruch organiczny',
+  'wolumen',
+  'CPC',
+  'TSK',
+  'intencja',
+  'SERP',
+];

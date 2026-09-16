@@ -8,6 +8,12 @@ import { StructureGraph } from '@/components/dossier/charts/StructureGraph';
 import { SummitSpeakers } from '@/components/dossier/charts/SummitSpeakers';
 import { TrafficCockpit } from '@/components/dossier/charts/TrafficCockpit';
 import { TrafficTimeline } from '@/components/dossier/charts/TrafficTimeline';
+import { AiPrompts } from '@/components/dossier/charts/AiPrompts';
+import { AnchorProfile } from '@/components/dossier/charts/AnchorProfile';
+import { GlossaryPanel } from '@/components/dossier/charts/GlossaryPanel';
+import { LinkQuality } from '@/components/dossier/charts/LinkQuality';
+import { PlPositions } from '@/components/dossier/charts/PlPositions';
+import { SeoHealth } from '@/components/dossier/charts/SeoHealth';
 
 /** Components that bring their own card frame. */
 const SELF_FRAMED: DossierComponent[] = [
@@ -17,6 +23,12 @@ const SELF_FRAMED: DossierComponent[] = [
   'domain-detail-summit',
   'summit-speakers',
   'traffic-cockpit',
+  'seo-health',
+  'link-quality',
+  'anchor-profile',
+  'pl-positions',
+  'ai-prompts',
+  'glossary-panel',
 ];
 
 const COMPONENTS: Record<DossierComponent, FC> = {
@@ -29,6 +41,12 @@ const COMPONENTS: Record<DossierComponent, FC> = {
   'domain-detail-chamber': () => <DomainDetail which="chamber" />,
   'domain-detail-summit': () => <DomainDetail which="summit" />,
   'summit-speakers': SummitSpeakers,
+  'seo-health': SeoHealth,
+  'link-quality': LinkQuality,
+  'anchor-profile': AnchorProfile,
+  'pl-positions': PlPositions,
+  'ai-prompts': AiPrompts,
+  'glossary-panel': GlossaryPanel,
 };
 
 /** Charts and panels that replace or extend the source document's figures. */
