@@ -4,6 +4,7 @@ import { ARTIFACTS, CASCADE, artifactByKey } from '@/content/conference/artifact
 import { EVENT, RECORDING, dayOffset, tLabel } from '@/content/conference/event';
 import { ROLES, SPEED_RULE } from '@/content/conference/production';
 import type { ArtifactKey } from '@/content/conference/types';
+import type { PlanKey } from '@/lib/route';
 import { CascadeNav } from './CascadeNav';
 import { PlanView } from './plan/PlanView';
 import { ProductionTimeline } from './ProductionTimeline';
@@ -53,9 +54,20 @@ const PANELS: Record<ArtifactKey, () => ReactNode> = {
  */
 type Mode = 'material' | 'plan';
 
-export function ConferenceView() {
-  const [mode, setMode] = useState<Mode>('material');
-  const [active, setActive] = useState<ArtifactKey>('nagranie');
+export function ConferenceView({
+  mode: initialMode,
+  tab,
+}: {
+  mode?: Mode;
+  /* One of the seven material families, or one of the four plan channels —
+     which one it is follows from `mode`, and the route type keeps the pair
+     honest at the call site. */
+  tab?: ArtifactKey | PlanKey;
+} = {}) {
+  const [mode, setMode] = useState<Mode>(initialMode ?? 'material');
+  const [active, setActive] = useState<ArtifactKey>(
+    initialMode !== 'plan' && tab ? (tab as ArtifactKey) : 'nagranie'
+  );
   const today = useMemo(() => dayOffset(), []);
   const artifact = artifactByKey(active);
   const multiple = Math.round(CASCADE.units / Math.max(CASCADE.observedUnits, 1));
@@ -124,7 +136,7 @@ export function ConferenceView() {
       </header>
 
       {mode === 'plan' ? (
-        <PlanView />
+        <PlanView channel={initialMode === 'plan' ? (tab as PlanKey | undefined) : undefined} />
       ) : (
       <>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

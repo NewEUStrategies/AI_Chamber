@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookMarked, CornerUpLeft } from 'lucide-react';
-import { DOSSIER_GROUPS, DOSSIER_PAGES } from '@/content/dossier';
+import { DOSSIER_REMAINING as DOSSIER_PAGES, DOSSIER_REMAINING_GROUPS as DOSSIER_GROUPS } from '@/content/dossier/split';
 import { DossierBlocks } from '@/components/dossier/DossierBlocks';
 import { DossierHtml } from '@/components/dossier/DossierHtml';
 import { useTermTooltipPositioning } from '@/components/dossier/useTermTooltipPositioning';
@@ -8,9 +8,22 @@ import { useTermTooltipPositioning } from '@/components/dossier/useTermTooltipPo
 const SOURCES_PAGE = 'zrodla';
 const HIGHLIGHT_MS = 3200;
 
-export function DossierView() {
-  const [pageId, setPageId] = useState(DOSSIER_PAGES[0].id);
-  const [pendingRefs, setPendingRefs] = useState<string[] | null>(null);
+export function DossierView({
+  page: initialPage,
+  refs: initialRefs,
+}: {
+  page?: string;
+  /** Bibliography entries to reveal on arrival, from a footnote elsewhere. */
+  refs?: string[];
+} = {}) {
+  /* An unknown id falls back to the first page rather than rendering nothing —
+     a stale deep link should land somewhere readable. */
+  const [pageId, setPageId] = useState(
+    initialPage && DOSSIER_PAGES.some((p) => p.id === initialPage) ? initialPage : DOSSIER_PAGES[0].id
+  );
+  const [pendingRefs, setPendingRefs] = useState<string[] | null>(
+    initialRefs && initialRefs.length ? initialRefs : null
+  );
   const [returnTo, setReturnTo] = useState<string | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const firstPaint = useRef(true);
