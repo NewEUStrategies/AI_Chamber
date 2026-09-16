@@ -503,6 +503,9 @@
   gap: 4px;
   min-width: 132px;
   max-width: min(300px, 80vw);
+  /* Dymek nigdy nie jest wyzszy niz okno; pozycjonowanie w ChartTip.tsx
+     przykleja go do krawedzi, a ten limit domyka gwarancje od strony CSS. */
+  max-height: calc(100vh - 16px);
   padding: 9px 12px;
   border-radius: var(--d-radius);
   border: 1px solid #e2e8f0;
@@ -534,25 +537,43 @@
   white-space: normal;
   margin-bottom: 4px;
 }
+/* Wiersz etykieta-wartosc zawija sie jako calosc: gdy oba czlony nie mieszcza
+   sie obok siebie, wartosc schodzi do wlasnej linii zamiast wypychac tekst
+   poza dymek. */
 .chart-tip .r {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
   white-space: normal;
   min-width: 0;
 }
+/* `break-word`, nie `anywhere`: lamie dlugie slowo, ale nie pozwala flexowi
+   scisnac etykiety do kolumny pojedynczych liter, bo nie obniza jej
+   szerokosci minimalnej. */
+.chart-tip .r .l {
+  overflow-wrap: break-word;
+}
+/* `flex: none` trzyma krotka wartosc (np. „5 / 5") w jednej linii; `max-width`
+   z zawijaniem domyka przypadek wartosci dluzszej niz caly dymek — np.
+   „kosztowne pomylki - wycofac sie" w macierzy kanalow. */
 .chart-tip .r b {
   margin-left: auto;
+  flex: none;
+  max-width: 100%;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   color: #293277;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .chart-tip .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   flex: none;
+  /* baseline wyrownuje tekst, wiec kropke sciagamy do linii pisma. */
+  align-self: center;
 }
 @media (max-width: 1023px) {
   .chart-tip { max-width: calc(100vw - 24px); }
