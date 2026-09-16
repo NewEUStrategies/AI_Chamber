@@ -23,6 +23,17 @@ export const MEDIUM_COLOR: Record<Medium, string> = {
 };
 
 /**
+ * Accent for the proposed-actions half of the page.
+ *
+ * The four media above spend four of the five validated categorical slots.
+ * This is the fifth and last, and the plan section uses it as one colour
+ * throughout: the plan is a single subject, and giving each of its four
+ * channels its own hue would have meant reusing slots that already mean a
+ * medium two clicks away.
+ */
+export const PLAN_ACCENT = CAT[4];
+
+/**
  * The source of everything on the page is not a series — it is where the
  * series come from. It wears recessive ink so the seven derivatives keep the
  * only colour in the cascade.
