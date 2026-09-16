@@ -41,16 +41,33 @@ function SplitBar({
         ))}
       </div>
       <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-        {parts.map((p, i) => (
-          <span key={p.label} className="inline-flex items-center gap-1.5 text-[11.5px] text-slate-500">
-            <i
-              className="h-2 w-2 rounded-full"
-              style={{ background: i === 0 ? color : 'rgba(41, 50, 119, 0.25)' }}
-            />
-            {p.label}
-            <b className="font-bold tabular-nums text-chamber-navy">{plPct(p.pct)}</b>
-          </span>
-        ))}
+        {parts.map((p, i) => {
+          const legendShow = (e: { clientX: number; clientY: number }) =>
+            tip.show(
+              e,
+              [{ label: 'udział', value: plPct(p.pct), color: i === 0 ? color : undefined }],
+              p.label,
+              i === 0
+                ? 'Pełnokolorowy pasek — część całego ruchu przypadająca na tę pozycję.'
+                : 'Szary pasek — część dopełniająca do stu procent.'
+            );
+          return (
+            <span
+              key={p.label}
+              className="inline-flex cursor-default items-center gap-1.5 rounded px-0.5 text-[11.5px] text-slate-500"
+              onMouseEnter={legendShow}
+              onMouseMove={legendShow}
+              onMouseLeave={tip.hide}
+            >
+              <i
+                className="h-2 w-2 rounded-full"
+                style={{ background: i === 0 ? color : 'rgba(41, 50, 119, 0.25)' }}
+              />
+              {p.label}
+              <b className="font-bold tabular-nums text-chamber-navy">{plPct(p.pct)}</b>
+            </span>
+          );
+        })}
       </div>
       <ChartTip tip={tip.tip} />
     </div>
