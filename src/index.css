@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply font-body bg-[#f2f3f6] text-slate-700;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-[7px] border border-slate-200/80 bg-white shadow-card;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-chamber-green px-5 py-2.5 text-sm font-bold text-chamber-navy-deep transition-all duration-200 hover:bg-chamber-green-dark hover:shadow-lg hover:shadow-chamber-green/30 focus:outline-none focus:ring-2 focus:ring-chamber-green/50 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-chamber-navy/20 px-5 py-2.5 text-sm font-bold text-chamber-navy transition-all duration-200 hover:border-chamber-green-deep hover:text-chamber-green-deep focus:outline-none focus:ring-2 focus:ring-chamber-green/40;
+  }
+  .input {
+    @apply w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-chamber-navy-deep placeholder:text-slate-400 focus:border-chamber-green focus:bg-white focus:outline-none focus:ring-2 focus:ring-chamber-green/25;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500;
+  }
+  .section-heading {
+    @apply font-display text-3xl font-extrabold text-chamber-navy sm:text-4xl;
+  }
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.25em] text-chamber-green-deep;
+  }
+}
+
+/* subtle dotted-grid texture echoing the AI Chamber brand graphics */
+.chamber-grid {
+  background-image: radial-gradient(rgba(41, 50, 119, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+::selection {
+  background: rgba(1, 222, 153, 0.4);
+  color: #141a3d;
+}
+
+/* slim scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(41, 50, 119, 0.25) transparent;
+}
