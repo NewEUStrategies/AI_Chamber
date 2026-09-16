@@ -197,7 +197,7 @@ export function DossierView() {
 
         <nav className="mt-10 flex items-stretch justify-between gap-3 border-t border-slate-200 pt-6">
           {prev ? (
-            <button onClick={() => goTo(prev.id)} className="group card flex min-w-0 max-w-[48%] items-center gap-3 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <button onClick={() => goTo(prev.id)} className="group card flex min-w-0 max-w-[48%] items-center gap-3 px-4 py-3 text-left transition-shadow hover:shadow-card-hover">
               <ArrowLeft className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-chamber-green-deep" />
               <span className="min-w-0">
                 <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
@@ -210,7 +210,7 @@ export function DossierView() {
             <span />
           )}
           {next && (
-            <button onClick={() => goTo(next.id)} className="group card ml-auto flex min-w-0 max-w-[48%] items-center gap-3 px-4 py-3 text-right transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <button onClick={() => goTo(next.id)} className="group card ml-auto flex min-w-0 max-w-[48%] items-center gap-3 px-4 py-3 text-right transition-shadow hover:shadow-card-hover">
               <span className="min-w-0">
                 <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
                   Następna

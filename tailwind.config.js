@@ -19,7 +19,10 @@ export default {
         body: ['"IBM Plex Sans"', '"Manrope"', 'sans-serif'],
       },
       animation: {
-        'fade-up': 'fadeUp 0.5s ease-out both',
+        // No fill-mode: `both` would keep `transform: translateY(0)` on the
+        // animated element forever, making it the containing block for the
+        // fixed-position tooltips and displacing them on every hover.
+        'fade-up': 'fadeUp 0.5s ease-out',
       },
       keyframes: {
         fadeUp: {
