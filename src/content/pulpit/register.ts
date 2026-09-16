@@ -143,11 +143,14 @@ const AUTHORED: Entry[] = [
     id: 'l-analityka',
     area: 'lejek',
     subject: 'Pomiar ścieżki do formularza',
-    now: 'Droga od źródła do formularza deklaracji jest niewidoczna na całej długości.',
-    evidence: 'Z zewnątrz nie widać ani zdarzeń konwersji, ani parametrów w linkach kampanijnych.',
-    status: 'brak',
+    now: 'Nie wiadomo, czy ścieżka od źródła do formularza deklaracji jest w ogóle mierzona.',
+    evidence:
+      'Obecność skryptu analitycznego da się odczytać ze źródła strony, ale to, czy formularz jest oznaczony jako konwersja i czy linki są tagowane, widać dopiero z panelu.',
+    status: 'nieznane',
+    howToCheck:
+      'Jedno pytanie do osoby prowadzącej stronę: czy formularz deklaracji jest zdarzeniem konwersji i czy w raportach widać źródło wejścia. Odpowiedź zajmuje minutę.',
     recommendation:
-      'Podpiąć analitykę i Search Console, oznaczyć formularz jako konwersję, otagować linki. Bez tego każda dalsza optymalizacja jest zgadywaniem.',
+      'Jeśli pomiar jest — zacząć od odczytu, nie od wdrożenia. Jeśli go nie ma, podpiąć analitykę i Search Console i oznaczyć formularz, bo bez tego każda dalsza optymalizacja jest zgadywaniem.',
     effort: 'niski',
     impact: 5,
     horizon: '0-30',
@@ -161,6 +164,7 @@ const AUTHORED: Entry[] = [
     now: 'Dwa z czterech etapów pozostają nieobserwowalne z zewnątrz.',
     evidence: 'Przejścia między etapami wymagają dostępu do analityki, którego rozpoznanie nie miało.',
     status: 'nieznane',
+    howToCheck: 'Dostęp do analityki domyka dwa etapy naraz — to ta sama prośba co przy pozycji o pomiarze ścieżki.',
     recommendation:
       'Domknąć pomiar, zanim cokolwiek się optymalizuje. Szerokość pasm w diagramie koduje ocenę siły etapu, nie zmierzony spadek.',
     effort: 'niski',
@@ -189,7 +193,8 @@ const AUTHORED: Entry[] = [
     area: 'lejek',
     subject: 'Aktywa, które nie przechwytują kontaktu',
     now: 'Najmocniejsze aktywa treściowe leżą otwarte i nie zostawiają ani jednego adresu.',
-    evidence: 'Inwentarz lead magnetów: kolumna „czy bramkuje” jest pusta albo nieustalona.',
+    evidence:
+      'Rozpoznanie podaje, że oba pliki są do pobrania wprost z witryny, bez formularza. To akurat sprawdza się jednym kliknięciem.',
     status: 'brak',
     recommendation:
       'Zbramkować raport o MŚP i CEE AI Index. Bramka miękka: e-mail, kraj i wielkość firmy wystarczą, streszczenie zostaje otwarte.',
@@ -254,11 +259,14 @@ const AUTHORED: Entry[] = [
     id: 's-kaskada',
     area: 'social',
     subject: 'Kaskada przez profile osobiste',
-    now: 'Posty wychodzą wyłącznie ze strony firmowej, która ma strukturalnie niższy zasięg niż profil człowieka.',
-    evidence: 'Brak śladu równoległych publikacji w sieciach zarządu i doradców.',
-    status: 'brak',
+    now: 'Nie wiadomo, czy publikacje strony są podawane dalej przez profile osobiste — i w jakiej skali.',
+    evidence:
+      'Rozpoznanie czytało stronę firmową, a nie prywatne profile zarządu, dyrektorów i doradców. Brak śladu w jednym miejscu nie jest dowodem na brak w drugim.',
+    status: 'nieznane',
+    howToCheck:
+      'Przejrzeć dziewięć profili przez tydzień albo po prostu zapytać, kto podaje dalej i jak często. Przy okazji wychodzi, kto jest skłonny to robić regularnie.',
     recommendation:
-      'Dziewięć sieci osobistych: post strony o 9:00, kaskada między 10:00 a 14:00, każdy z własnym zdaniem. Cztery z tych sieci są zagraniczne.',
+      'Niezależnie od odpowiedzi warto ustalić rytm: post strony o 9:00, kaskada między 10:00 a 14:00, każdy z własnym zdaniem. Cztery z dziewięciu sieci są zagraniczne, czyli tam, gdzie baza członkowska jest symboliczna.',
     effort: 'niski',
     impact: 4,
     horizon: '0-30',
@@ -269,11 +277,13 @@ const AUTHORED: Entry[] = [
     id: 's-amplifikacja',
     area: 'social',
     subject: 'Protokół amplifikacji',
-    now: 'Izba publikuje i liczy na dobrą wolę tagowanych podmiotów.',
-    evidence: 'Brak śladu pakietów wysyłanych przed publikacją.',
-    status: 'brak',
+    now: 'Nie wiadomo, czy tagowane podmioty dostają cokolwiek przed publikacją.',
+    evidence:
+      'Wysyłka do prelegentów i partnerów jest korespondencją wewnętrzną — z zewnątrz nie zostawia śladu ani gdy jest, ani gdy jej nie ma.',
+    status: 'nieznane',
+    howToCheck: 'Pytanie do osoby prowadzącej kanał: co dostaje tagowany podmiot i kiedy.',
     recommendation:
-      'Pakiet T-24h do każdego tagowanego: grafika w dwóch formatach, trzy gotowe zdania, bezpośredni link. Różnica w zasięgu jest rzędu wielkości.',
+      'Jeśli pakietu nie ma, wprowadzić go w kształcie T-24h: grafika w dwóch formatach, trzy gotowe zdania do wyboru, bezpośredni link. Jeśli jest — sprawdzić, czy zawiera wszystkie trzy elementy, bo to one decydują, czy ktoś z niego skorzysta.',
     effort: 'niski',
     impact: 4,
     horizon: '30-90',
@@ -301,7 +311,8 @@ const AUTHORED: Entry[] = [
     area: 'social',
     subject: 'YouTube',
     now: 'Kanał wideo nie istnieje.',
-    evidence: 'Brak kanału w materiale rozpoznawczym; nagrania paneli nie mają gdzie leżeć.',
+    evidence:
+      'Izba nie linkuje do kanału ani z witryny, ani z profilu społecznościowego, a rozpoznanie żadnego nie znalazło. To jedna z niewielu rzeczy sprawdzalnych w całości z zewnątrz.',
     status: 'brak',
     recommendation:
       'Założyć jako archiwum, nie jako kanał: pełne nagrania, rozdziały, transkrypcje w opisie. Naprawia przy okazji widoczność w modelach językowych.',
@@ -317,11 +328,14 @@ const AUTHORED: Entry[] = [
     id: 'e-higiena',
     area: 'email',
     subject: 'Higiena wysyłki',
-    now: 'Nie da się z zewnątrz ustalić, czy SPF, DKIM i DMARC są skonfigurowane.',
-    evidence: 'Konfiguracja domeny wysyłkowej jest widoczna dopiero z panelu dostawcy.',
+    now: 'Stan uwierzytelnienia domeny wysyłkowej nie został sprawdzony.',
+    evidence:
+      'Rekordy SPF i DMARC są publiczne w DNS, więc akurat to da się rozstrzygnąć bez niczyjej pomocy. DKIM i wydzielenie subdomeny wymagają już panelu dostawcy.',
     status: 'nieznane',
+    howToCheck:
+      'Zapytanie DNS o rekordy TXT domeny — dosłownie minuta i zero kosztu. Reszta: jedno pytanie do osoby obsługującej wysyłkę.',
     recommendation:
-      'Zweryfikować uwierzytelnienie i wydzielić subdomenę dla wysyłki masowej. Warunek wstępny: bez tego najlepszy briefing nie dociera do skrzynki.',
+      'Zacząć od tego sprawdzenia, bo jest najtańsze w całym rejestrze. Czego brakuje, uzupełnić; przy okazji wydzielić subdomenę dla wysyłki masowej, żeby korespondencja operacyjna nie dzieliła reputacji.',
     effort: 'niski',
     impact: 5,
     horizon: '0-30',
@@ -332,11 +346,14 @@ const AUTHORED: Entry[] = [
     id: 'e-lista',
     area: 'email',
     subject: 'Jedna lista',
-    now: 'Cztery źródła zapisów — webinary, formularz, wydarzenia, newsletter — żyją osobno.',
-    evidence: 'Każde wejście prowadzi do innego formularza; brak wspólnego identyfikatora odbiorcy.',
-    status: 'brak',
+    now: 'Cztery wejścia mają osobne formularze. Czy trafiają do jednego systemu, z zewnątrz nie widać.',
+    evidence:
+      'Osobne formularze nie przesądzają o tym, co jest pod spodem: kontakty mogą schodzić się w CRM-ie albo w CRM-ie i narzędziu do wysyłki. Z zewnątrz widać wejścia, nie bazę.',
+    status: 'nieznane',
+    howToCheck:
+      'Jedno pytanie: gdzie lądują zapisy z każdego z czterech wejść i czy da się dziś wysłać mail do „firm 6–50 osób z Czech”. Druga część odpowiedzi jest ważniejsza od pierwszej.',
     recommendation:
-      'Spiąć w jeden system z czterema wymiarami segmentacji: kraj, wielkość firmy w progach pakietów, branża regulowana, status kontaktu.',
+      'Jeśli wspólny system jest, rzecz sprowadza się do segmentacji: kraj, wielkość firmy w progach pakietów, branża regulowana, status kontaktu. Jeśli go nie ma — najpierw spięcie, bo bez niego segmentacja nie ma na czym stanąć.',
     effort: 'średni',
     impact: 5,
     horizon: '0-30',
@@ -347,8 +364,9 @@ const AUTHORED: Entry[] = [
     id: 'e-brief',
     area: 'email',
     subject: 'Policy Brief',
-    now: 'Newsletter istnieje, ale jest podsumowaniem dla członków, nie briefingiem regulacyjnym.',
-    evidence: 'Zapowiedzi newslettera w kanale społecznościowym opisują go jako wydanie miesięczne.',
+    now: 'Newsletter wychodzi w rytmie miesięcznym. Co jest w środku, z zewnątrz nie widać.',
+    evidence:
+      'Zapowiedzi w kanale społecznościowym nazywają kolejne wydania po miesiącach, więc kadencja jest ustalona. Ocena dotyczy wyłącznie jej — treści nie oceniam, bo jej nie widziałem.',
     status: 'kuleje',
     recommendation:
       'Cotygodniowy briefing po angielsku, wtorek rano, stała struktura czterech bloków. Kiedy czyta go administracja, obecność w nim da się sprzedać partnerowi.',
@@ -362,11 +380,14 @@ const AUTHORED: Entry[] = [
     id: 'e-sekwencje',
     area: 'email',
     subject: 'Sekwencje cyklu życia',
-    now: 'Zapis na webinar kończy się niczym, a odnowienie składki jest automatyczne i bezgłośne.',
-    evidence: 'Brak śladu automatyzacji poza pojedynczym potwierdzeniem zapisu.',
-    status: 'brak',
+    now: 'Nie wiadomo, co dostaje ktoś, kto zapisał się na webinar albo wstąpił do izby.',
+    evidence:
+      'Sekwencje mailowe widzi tylko ich odbiorca. Rozpoznanie nie zapisywało się na listy, więc nie ma podstaw, by twierdzić, że ich nie ma.',
+    status: 'nieznane',
+    howToCheck:
+      'Zapisać się własnym adresem na webinar i na newsletter, odczekać dwa tygodnie i spisać, co przyszło. Koszt zerowy, odpowiedź pełna.',
     recommendation:
-      'Sześć sekwencji wyzwalanych zdarzeniem, od onboardingu po reaktywację. Ponad połowa nieodnowień wynika z braku zaangażowania, nie z ceny.',
+      'Uzupełnić to, czego brakuje, do sześciu sekwencji wyzwalanych zdarzeniem — od onboardingu po reaktywację. Pierwsza w kolejce jest onboardingowa, bo ponad połowa nieodnowień wynika z braku zaangażowania, nie z ceny.',
     effort: 'wysoki',
     impact: 5,
     horizon: '30-90',
@@ -398,6 +419,7 @@ const AUTHORED: Entry[] = [
     now: 'Nie wiadomo, czy plik disavow w ogóle istnieje.',
     evidence: 'Zawartość Search Console jest widoczna wyłącznie z konta właściciela serwisu.',
     status: 'nieznane',
+    howToCheck: 'Pierwsze pytanie do osoby odpowiedzialnej za stronę. Sam plik sprawdza się w Search Console w minutę.',
     recommendation:
       'Sprawdzić i zgłosić domeny na tanich końcówkach oraz hosty farm linkowych. To pierwsze pytanie do osoby odpowiedzialnej za stronę.',
     effort: 'niski',
@@ -444,8 +466,9 @@ const AUTHORED: Entry[] = [
     id: 'w-bramka',
     area: 'www',
     subject: 'Bramka na raporcie',
-    now: 'Raport o MŚP i CEE AI Index są do pobrania bez pozostawienia kontaktu.',
-    evidence: 'Oba pliki dostępne wprost z witryny, bez formularza.',
+    now: 'Raport o MŚP i CEE AI Index są, wedle rozpoznania, do pobrania bez pozostawienia kontaktu.',
+    evidence:
+      'Rozpoznanie podaje oba pliki jako dostępne wprost z witryny. Warto to potwierdzić kliknięciem, zanim cokolwiek się zmienia — to jedna z tańszych weryfikacji w rejestrze.',
     status: 'brak',
     recommendation:
       'Trzy pola przed plikiem: e-mail, kraj, wielkość firmy. Streszczenie zostaje otwarte, żeby nie stracić cytowalności w mediach.',
@@ -477,8 +500,11 @@ const AUTHORED: Entry[] = [
     area: 'mediapack',
     subject: 'Tiering listy',
     now: 'Nie widać ani listy akredytacyjnej, ani publikacji z podziałem na redakcje.',
-    evidence: 'Brak pomiaru po stronie izby — to nie to samo co brak działania, i tak jest to zapisane.',
+    evidence:
+      'Z zewnątrz nie widać ani listy akredytacyjnej, ani publikacji z podziałem na redakcje. Brak widoczności to nie brak działania, i tak jest to zapisane.',
     status: 'nieznane',
+    howToCheck:
+      'Poprosić o listę akredytacyjną z ostatniej edycji i o zestawienie publikacji. Jeśli jedno albo drugie nie istnieje, to też jest odpowiedź.',
     recommendation:
       'Trzy poziomy z różną mechaniką: kontakt osobisty, wysyłka pod embargo, komunikat w dniu zero. Wysyłka do wszystkich jest wysyłką do nikogo.',
     effort: 'średni',
@@ -492,8 +518,9 @@ const AUTHORED: Entry[] = [
     area: 'mediapack',
     subject: 'Zawartość pakietu',
     now: 'Co zawiera dzisiejszy pakiet, nie da się ustalić bez dostępu do wysyłki.',
-    evidence: 'Pakiet prasowy nie jest publikowany na witrynie.',
+    evidence: 'Pakiet prasowy nie jest publikowany na witrynie, a wysyłka do redakcji nie zostawia publicznego śladu.',
     status: 'nieznane',
+    howToCheck: 'Poprosić o ostatni wysłany pakiet i porównać z listą dziewięciu elementów obok.',
     recommendation:
       'Dziewięć elementów, w tym trzy tematy sformułowane jako gotowe leady artykułu. Dziennikarz potrzebuje kąta, nie agendy.',
     effort: 'średni',
@@ -521,11 +548,13 @@ const AUTHORED: Entry[] = [
     id: 'm-sponsor',
     area: 'mediapack',
     subject: 'Pakiet sponsorski',
-    now: 'Przy niejawnych cenach partnerstw nie ma dokumentu, który uzasadniałby kwotę.',
-    evidence: 'Oferta partnerska nie jest publikowana, a zakres ekspozycji nie jest nigdzie opisany.',
-    status: 'brak',
+    now: 'Publicznie nie ma dokumentu partnerskiego. Czy partnerzy dostają go prywatnie, nie widać.',
+    evidence:
+      'Oferta partnerska nie jest publikowana, co przy niejawnych cenach jest normalne i samo w sobie niczego nie przesądza.',
+    status: 'nieznane',
+    howToCheck: 'Poprosić o dokument wysyłany partnerom i sprawdzić, czy odpowiada na cztery pytania obok.',
     recommendation:
-      'Osobny dokument: co partner kupuje w warstwie ekspozycji, ile materiałów wideo powstanie, co dostanie po wydarzeniu i w jakim terminie.',
+      'Jeśli dokumentu nie ma, przygotować go: co partner kupuje w warstwie ekspozycji, ile materiałów wideo z jego udziałem powstanie, co dostanie po wydarzeniu i w jakim terminie. Przy niejawnych cenach to jedyny sposób uzasadnienia kwoty.',
     effort: 'średni',
     impact: 4,
     horizon: '30-90',
@@ -541,7 +570,7 @@ export const REGISTER: Entry[] = [...AUTHORED, ...CONFERENCE_ENTRIES];
  * ---------------------------------------------------------------- */
 
 export const HORIZONS: { key: Horizon; label: string; frame: string }[] = [
-  { key: '0-30', label: 'Pierwsze 30 dni', frame: 'Co da się zrobić bez budżetu i bez zgody zarządu.' },
+  { key: '0-30', label: 'Pierwsze 30 dni', frame: 'Bez dodatkowego budżetu, w zakresie uzgodnionym na starcie.' },
   { key: '30-90', label: 'Dni 30–90', frame: 'Budowa brakujących elementów. Wymaga pracy i decyzji.' },
   { key: '90+', label: 'Powyżej 90 dni', frame: 'To, co potrzebuje zespołu albo pieniędzy.' },
 ];

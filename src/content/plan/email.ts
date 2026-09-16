@@ -36,8 +36,18 @@ export const HYGIENE = [
   },
 ];
 
-/** The first job: four intake points that currently live apart. */
+/**
+ * Four intake points with four separate forms.
+ *
+ * What is on the other side of them is not visible from outside: the contacts
+ * may already converge in a CRM, or in a CRM and a sending tool. The register
+ * treats this as an open question rather than a finding, and so does this file.
+ */
 export const LIST_SOURCES = ['webinary', 'formularz członkowski', 'wydarzenia', 'newsletter'];
+
+/** The question that decides whether this is an integration job or a segmentation one. */
+export const LIST_QUESTION =
+  'Gdzie lądują zapisy z każdego z czterech wejść i czy da się dziś wysłać mail do „firm 6–50 osób z Czech”? Druga część odpowiedzi jest ważniejsza od pierwszej.';
 
 export const SEGMENTS = [
   { dimension: 'Kraj', values: 'każdy z rynków regionu', why: 'Determinuje ekspansję i decyduje, która treść w ogóle jest właściwa.' },
@@ -96,7 +106,7 @@ export const SEQUENCES: Sequence[] = [
     shape: 'Dane dla kraju odbiorcy, wniosek dla jego wielkości firmy, case study, oferta.',
     mails: 4,
     days: null,
-    why: 'Raport jest najlepszym narzędziem akwizycyjnym i dziś nie zbiera kontaktu.',
+    why: 'Raport jest najmocniejszym aktywem akwizycyjnym, a wedle rozpoznania leży otwarty — to sprawdza się jednym kliknięciem.',
   },
   {
     name: 'Po webinarze',
@@ -104,7 +114,7 @@ export const SEQUENCES: Sequence[] = [
     shape: 'Nagranie, materiał pogłębiony, zaproszenie na rozmowę.',
     mails: 3,
     days: 10,
-    why: 'Dziś zapis kończy się niczym.',
+    why: 'Co dostaje dziś osoba po zapisie, widzi tylko ona sama — warto zapisać się własnym adresem i sprawdzić.',
   },
   {
     name: 'Konferencyjna',
@@ -143,7 +153,11 @@ export const EMAIL_WATCH = {
 /** Four sections of work, in the order they unblock each other. */
 export const EMAIL_ORDER: Section[] = [
   { name: 'Higiena techniczna', what: 'Sześć pozycji poniżej', why: 'Warunek wstępny. Bez tego reszta nie dociera.' },
-  { name: 'Jedna lista', what: 'Spiąć cztery źródła zapisów w jeden system', why: 'Dziś żyją osobno, więc segmentacja jest niemożliwa.' },
+  {
+    name: 'Jedna lista',
+    what: 'Ustalić, gdzie schodzą się zapisy z czterech wejść',
+    why: 'Od odpowiedzi zależy, czy to praca nad integracją, czy już tylko nad segmentacją.',
+  },
   { name: 'Policy Brief', what: 'Cotygodniowy briefing po angielsku', why: 'Produkt flagowy — buduje pozycję u administracji.' },
   { name: 'Sekwencje cyklu życia', what: 'Sześć automatyzacji', why: 'Zamieniają jednorazowy kontakt w relację.' },
 ];

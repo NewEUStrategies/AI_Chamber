@@ -1,6 +1,6 @@
 import { useId, useMemo, useState } from 'react';
-import { ArrowRight, ChevronDown, MoveRight } from 'lucide-react';
-import { INK, MARK, STATUS } from '@/components/marketing/palette';
+import { ArrowRight, ChevronDown, HelpCircle, MoveRight } from 'lucide-react';
+import { INK, MARK, STATUS, type StatusKey } from '@/components/marketing/palette';
 import { StatusChip, ViewToggle } from '@/components/marketing/primitives';
 import { AREAS, HORIZONS, REGISTER, areaByKey } from '@/content/pulpit/register';
 import type { AreaKey, Entry, Horizon } from '@/content/pulpit/types';
@@ -43,7 +43,16 @@ const byImpact = (a: Entry, b: Entry) => b.impact - a.impact;
  * Expanding a row is what reveals the evidence and the two destinations. The
  * area cards above give the fast path; this gives the reasoned one.
  */
-export function RegisterList({ onNavigate }: { onNavigate: (to: Route) => void }) {
+export function RegisterList({
+  onNavigate,
+  status,
+  onStatusChange,
+}: {
+  onNavigate: (to: Route) => void;
+  /** Controlled from the balance bar above, which is the picture of this filter. */
+  status: StatusKey | null;
+  onStatusChange: (s: StatusKey | null) => void;
+}) {
   const uid = useId();
   const bodyId = `${uid}-body`;
   const [areas, setAreas] = useState<AreaKey[]>([]);
@@ -68,9 +77,10 @@ export function RegisterList({ onNavigate }: { onNavigate: (to: Route) => void }
       REGISTER.filter(
         (e) =>
           (areas.length === 0 || areas.includes(e.area)) &&
-          (horizons.length === 0 || horizons.includes(e.horizon))
+          (horizons.length === 0 || horizons.includes(e.horizon)) &&
+          (status === null || e.status === status)
       ).sort(byImpact),
-    [areas, horizons]
+    [areas, horizons, status]
   );
 
   const toggle = <T,>(set: T[], v: T, apply: (next: T[]) => void) =>
@@ -138,10 +148,22 @@ export function RegisterList({ onNavigate }: { onNavigate: (to: Route) => void }
         <ViewToggle table={table} onChange={setTable} controls={bodyId} />
       </div>
 
-      <p className="mt-2 text-[11.5px] font-semibold text-slate-500" role="status">
-        Widoczne <b className="tabular-nums text-chamber-navy">{view.length}</b> z{' '}
-        <b className="tabular-nums text-chamber-navy">{REGISTER.length}</b> pozycji · uporządkowane malejąco
-        po wpływie
+      <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px] font-semibold text-slate-500" role="status">
+        <span>
+          Widoczne <b className="tabular-nums text-chamber-navy">{view.length}</b> z{' '}
+          <b className="tabular-nums text-chamber-navy">{REGISTER.length}</b> pozycji · uporządkowane
+          malejąco po wpływie
+        </span>
+        {status && (
+          <button
+            type="button"
+            onClick={() => onStatusChange(null)}
+            className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-bold"
+            style={{ background: `${STATUS[status].fill}14`, color: STATUS[status].fill }}
+          >
+            stan: {STATUS[status].label} · wyczyść
+          </button>
+        )}
       </p>
 
       <div id={bodyId} className="mt-3">
@@ -158,7 +180,8 @@ export function RegisterList({ onNavigate }: { onNavigate: (to: Route) => void }
                   <th className="py-1.5 pr-3 text-right font-bold">Wpływ</th>
                   <th className="py-1.5 pr-3 font-bold">Nakład</th>
                   <th className="py-1.5 pr-3 font-bold">Horyzont</th>
-                  <th className="py-1.5 font-bold">Dowód</th>
+                  <th className="py-1.5 pr-3 font-bold">Dowód</th>
+                  <th className="py-1.5 font-bold">Jak ustalić</th>
                 </tr>
               </thead>
               <tbody>
@@ -174,12 +197,13 @@ export function RegisterList({ onNavigate }: { onNavigate: (to: Route) => void }
                     <td className="py-2 pr-3 text-right font-bold tabular-nums text-chamber-navy">{e.impact}</td>
                     <td className="py-2 pr-3 text-slate-600">{e.effort}</td>
                     <td className="py-2 pr-3 font-mono text-slate-500">{e.horizon}</td>
-                    <td className="py-2 text-slate-600">{e.evidence}</td>
+                    <td className="py-2 pr-3 text-slate-600">{e.evidence}</td>
+                    <td className="py-2 text-slate-600">{e.howToCheck ?? '—'}</td>
                   </tr>
                 ))}
                 {view.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="py-4 text-center text-slate-400">
+                    <td colSpan={10} className="py-4 text-center text-slate-400">
                       Żadna pozycja nie pasuje do wybranych filtrów.
                     </td>
                   </tr>
@@ -266,6 +290,21 @@ export function RegisterList({ onNavigate }: { onNavigate: (to: Route) => void }
                       <p className="text-[12px] leading-[1.65] text-slate-600">
                         <b className="text-slate-500">Na czym opiera się ocena:</b> {e.evidence}
                       </p>
+                      {e.howToCheck && (
+                        <p
+                          className="mt-2 flex items-start gap-2 rounded-[8px] px-3 py-2 text-[12px] leading-[1.6] text-slate-600"
+                          style={{ background: INK.track }}
+                        >
+                          <HelpCircle
+                            aria-hidden
+                            className="mt-[2px] h-3.5 w-3.5 shrink-0"
+                            style={{ color: STATUS.nieznane.fill }}
+                          />
+                          <span>
+                            <b className="text-chamber-navy">Jak to ustalić:</b> {e.howToCheck}
+                          </span>
+                        </p>
+                      )}
                       <div className="mt-3 flex flex-wrap gap-2">
                         <button
                           type="button"

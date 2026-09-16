@@ -1,8 +1,9 @@
-import { StatTile } from '@/components/marketing/primitives';
-import { STATUS } from '@/components/marketing/palette';
+import { useState } from 'react';
+import { STATUS, type StatusKey } from '@/components/marketing/palette';
 import { HORIZONS, TOTALS } from '@/content/pulpit/register';
 import type { Route } from '@/lib/route';
 import { AreaMap } from './AreaMap';
+import { Balance } from './Balance';
 import { RegisterList } from './RegisterList';
 
 /**
@@ -17,8 +18,14 @@ import { RegisterList } from './RegisterList';
  * Status is the only colour scale on the page, which is exactly what the
  * status tokens are reserved for — and it is the right one, because the
  * question the page answers is what state each thing is in.
+ *
+ * The balance bar and the register are one object split in two: the bar is the
+ * shape of the list and the control for it. Keeping the filter here rather
+ * than inside the list is what lets them stay in step.
  */
 export function PulpitView({ onNavigate }: { onNavigate: (to: Route) => void }) {
+  const [status, setStatus] = useState<StatusKey | null>(null);
+
   return (
     <div className="animate-fade-up space-y-6">
       <header>
@@ -29,40 +36,19 @@ export function PulpitView({ onNavigate }: { onNavigate: (to: Route) => void }) 
           Stan aktualny obok rekomendacji
         </h1>
         <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
-          Jeden rejestr na sześć obszarów. Każdy wiersz zestawia to, co rozpoznanie ustaliło, z tym, co
+          Jeden rejestr na sześć obszarów. Każdy wiersz zestawia to, co dało się ustalić, z tym, co
           proponujemy zrobić — i prowadzi do strony, na której ta rekomendacja jest rozpisana. Liczby nie
-          są tu przepisywane: wszystko, co policzalne, dolicza się z danych rozpoznania. Tam, gdzie
-          z zewnątrz nie da się rozstrzygnąć stanu, napisane jest{' '}
-          <b style={{ color: STATUS.nieznane.fill }}>nieznane</b> — i takich pozycji jest{' '}
-          <b className="tabular-nums">{TOTALS.unknown}</b>.
+          są tu przepisywane: wszystko, co policzalne, dolicza się z danych rozpoznania.
+        </p>
+        <p className="mt-2 max-w-3xl text-[13.5px] leading-[1.7] text-slate-500">
+          <b style={{ color: STATUS.nieznane.fill }}>{TOTALS.unknown} z {TOTALS.entries} pozycji</b> to
+          rzeczy, których z zewnątrz rozstrzygnąć się nie da — bo dzieją się w systemach, do których
+          rozpoznanie nie miało wglądu. Każda z nich ma dopisane, jak to sprawdzić i ile to kosztuje.
+          Większość rozwiązuje jedno pytanie na spotkaniu.
         </p>
       </header>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile
-          label="Pozycji w rejestrze"
-          value={String(TOTALS.entries)}
-          sub="na sześć obszarów, każda z własnym adresem"
-        />
-        <StatTile
-          label="Rzeczy, których nie ma wcale"
-          value={String(TOTALS.missing)}
-          sub="stan „brak” — nie słabo działa, tylko nie istnieje"
-          tone="bad"
-        />
-        <StatTile
-          label="Niemożliwych do rozstrzygnięcia z zewnątrz"
-          value={String(TOTALS.unknown)}
-          sub="uczciwa odpowiedź, nie ocena negatywna"
-          accent={STATUS.nieznane.fill}
-        />
-        <StatTile
-          label="Do zrobienia w pierwsze 30 dni"
-          value={String(TOTALS.first30)}
-          sub="bez budżetu i bez zgody zarządu"
-          tone="good"
-        />
-      </div>
+      <Balance active={status} onPick={setStatus} />
 
       <section>
         <h2 className="font-display text-[17px] font-extrabold leading-tight text-chamber-navy">
@@ -83,12 +69,12 @@ export function PulpitView({ onNavigate }: { onNavigate: (to: Route) => void }) 
           Rejestr: stan aktualny → rekomendacja
         </h2>
         <p className="mt-1.5 max-w-3xl text-[13px] leading-[1.65] text-slate-600">
-          Po lewej to, co jest, po prawej to, co proponujemy. Rozwinięcie wiersza pokazuje, na czym opiera
-          się ocena, i prowadzi dalej: do rekomendacji, a przy części pozycji także do strony dossier,
-          która dokumentuje odczyt. Kolejność jest malejąca po wpływie — ocenianym, nie prognozowanym.
+          Po lewej to, co wiadomo, po prawej to, co proponujemy. Rozwinięcie wiersza pokazuje, na czym
+          opiera się ocena — a przy pozycjach nierozstrzygniętych także to, jak je zamknąć. Stamtąd
+          prowadzi dalej: do rekomendacji, a przy części pozycji do strony dossier dokumentującej odczyt.
         </p>
         <div className="mt-4">
-          <RegisterList onNavigate={onNavigate} />
+          <RegisterList onNavigate={onNavigate} status={status} onStatusChange={setStatus} />
         </div>
       </section>
 
