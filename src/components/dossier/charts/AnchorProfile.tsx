@@ -67,7 +67,13 @@ export function AnchorProfile() {
             <tbody>
               {ANCHORS.map((a) => (
                 <tr key={a.text}>
-                  <td style={{ maxWidth: '320px' }}>{a.text}</td>
+                  <td style={{ maxWidth: '320px' }}>
+                    {a.kind === 'spam' ? (
+                      <Term k="anchor reklamowy">{a.text}</Term>
+                    ) : (
+                      a.text
+                    )}
+                  </td>
                   <td className="num tabnum">{plNum(a.backlinks)}</td>
                   <td className="num tabnum">{plNum(a.domains)}</td>
                   <td className="num tabnum">{a.firstSeen}</td>

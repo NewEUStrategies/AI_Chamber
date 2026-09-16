@@ -80,6 +80,11 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     body: 'Widoczny tekst, w który wpisany jest odnośnik. Wyszukiwarki traktują go jako opis strony docelowej.',
     reading: 'Anchory opisujące usługi SEO zamiast organizacji to sygnał, że link nie powstał z powodów redakcyjnych.',
   },
+  'anchor reklamowy': {
+    full: 'Anchor reklamowy farmy linków',
+    body: 'Tekst linku, który zamiast opisywać stronę docelową reklamuje kanał sprzedawcy linków na Telegramie, np. „telegram @seo_anomaly – seo backlinks". @seo_anomaly, @bhs_links czy @seo_cartel to nicki kont sprzedających „backlinks", „black-links" (linki z czarnego rynku SEO), „traffic boost" i „link indexing" (wpisanie adresu do katalogów, żeby wyszukiwarka go odnotowała).',
+    reading: 'Domena docelowa jest w takim linku przypadkowa — farma linkuje do losowych adresów, żeby jej strony wyglądały na aktywne. Świadectwo szumu, nie ataku na konkretną organizację.',
+  },
   SERP: {
     full: 'Search Engine Results Page',
     body: 'Strona wyników wyszukiwania. Obok klasycznych dziesięciu linków zawiera dziś także odpowiedzi generowane przez AI, mapy, grafikę i inne bloki.',

@@ -32,6 +32,7 @@ export const GLOSSARY_ORDER: string[] = [
   'UGC',
   'link sponsorowany',
   'anchor',
+  'anchor reklamowy',
   'TLD',
   'PBN',
   'disavow',
