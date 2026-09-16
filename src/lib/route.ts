@@ -1,5 +1,5 @@
 import type { ArtifactKey } from '@/content/conference/types';
-import type { RecruitmentTab } from '@/content/dossier/split';
+import type { AnalizaTab, RecruitmentTab, SladTab } from '@/content/dossier/split';
 
 /**
  * Where a click goes.
@@ -31,6 +31,8 @@ export type Route =
   | { view: 'konferencje'; mode?: 'material'; tab?: ArtifactKey }
   | { view: 'konferencje'; mode: 'plan'; tab?: PlanKey }
   | { view: 'rekrutacja'; tab?: RecruitmentTab }
+  | { view: 'analiza'; tab?: AnalizaTab }
+  | { view: 'slad'; tab?: SladTab }
   | { view: 'stanowiska'; tab?: StanowiskaTab }
   /**
    * `refs` carries bibliography entries to reveal on arrival. The recruitment
@@ -55,6 +57,8 @@ export function routeKey(route: Route, visit: number): string {
   if (route.view === 'marketing') parts.push(route.segment ?? '');
   if (route.view === 'konferencje') parts.push(route.mode ?? '', route.tab ?? '');
   if (route.view === 'rekrutacja') parts.push(route.tab ?? '');
+  if (route.view === 'analiza') parts.push(route.tab ?? '');
+  if (route.view === 'slad') parts.push(route.tab ?? '');
   if (route.view === 'stanowiska') parts.push(route.tab ?? '');
   if (route.view === 'dossier') parts.push(route.page ?? '', (route.refs ?? []).join(','));
   return `${parts.join(':')}#${visit}`;

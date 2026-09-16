@@ -1,5 +1,15 @@
 import { Suspense, lazy, useCallback, useState } from 'react';
-import { BookText, Clapperboard, IdCard, LayoutDashboard, Megaphone, UserRoundSearch, LoaderCircle } from 'lucide-react';
+import {
+  Activity,
+  BookText,
+  Clapperboard,
+  IdCard,
+  LayoutDashboard,
+  Megaphone,
+  Radar,
+  UserRoundSearch,
+  LoaderCircle,
+} from 'lucide-react';
 import { ChamberLogo } from '@/components/ChamberLogo';
 import { PulpitView } from '@/components/pulpit/PulpitView';
 import { routeKey, sameView, type Route, type ViewKey } from '@/lib/route';
@@ -19,9 +29,10 @@ const ConferenceView = lazy(() =>
   import('@/components/conference/ConferenceView').then((m) => ({ default: m.ConferenceView }))
 );
 
-// The recruitment pages carry the same prose machinery as the dossier.
-const RecruitmentView = lazy(() =>
-  import('@/components/recruitment/RecruitmentView').then((m) => ({ default: m.RecruitmentView }))
+// Trzy sekcje wyprowadzone z dossier dzielą jeden widok: ten sam mechanizm
+// zakładek, przypisów i bloków prozy, tylko inna lista stron.
+const SectionView = lazy(() =>
+  import('@/components/sections/SectionView').then((m) => ({ default: m.SectionView }))
 );
 
 // Karty stanowiskowe: pięć kart, macierz, wykres płacowy i kalkulator.
@@ -35,6 +46,8 @@ const NAV: { key: ViewKey; label: string; icon: React.ComponentType<{ className?
   { key: 'konferencje', label: 'Konferencje', icon: Clapperboard },
   { key: 'rekrutacja', label: 'Rekrutacja', icon: UserRoundSearch },
   { key: 'stanowiska', label: 'Stanowiska', icon: IdCard },
+  { key: 'analiza', label: 'Analiza rynkowa', icon: Radar },
+  { key: 'slad', label: 'Ślad cyfrowy', icon: Activity },
   { key: 'dossier', label: 'Dossier', icon: BookText },
 ];
 
@@ -67,23 +80,30 @@ export default function App() {
   return (
     <div className="min-h-screen chamber-grid">
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-          <ChamberLogo className="h-6 max-w-[24vw] object-contain object-left sm:h-8 sm:max-w-[35vw]" />
-          <nav className="flex max-w-full shrink items-center gap-0.5 overflow-x-auto rounded-full border border-slate-200 bg-slate-50 p-1 sm:shrink-0 sm:gap-1">
+        {/*
+         * Osiem pozycji nie mieści się w jednym wierszu obok logo na żadnym
+         * realnym ekranie, więc nawigacja schodzi do własnego wiersza, kiedy
+         * zabraknie miejsca, zamiast ściskać etykiety albo wypychać nagłówek
+         * poza ekran. Przewijanie poziome zostaje jako ostatnie zabezpieczenie.
+         */}
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+          <ChamberLogo className="h-6 shrink-0 object-contain object-left sm:h-8" />
+          <nav className="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-slate-200 bg-slate-50 p-1 xl:gap-1">
             {NAV.map((item) => (
               <button
                 key={item.key}
                 onClick={() => switchView(item.key)}
                 aria-label={item.label}
                 aria-current={route.view === item.key ? 'page' : undefined}
-                className={`flex shrink-0 items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-bold transition-all duration-200 sm:px-4 ${
+                title={item.label}
+                className={`flex shrink-0 items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-bold transition-all duration-200 xl:px-3.5 ${
                   route.view === item.key
                     ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
                     : 'text-chamber-navy hover:bg-slate-100'
                 }`}
               >
                 <item.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{item.label}</span>
+                <span className="hidden xl:inline">{item.label}</span>
               </button>
             ))}
           </nav>
@@ -101,9 +121,14 @@ export default function App() {
           <Suspense fallback={<ViewLoader label="Ładowanie kokpitu…" />}>
             <MarketingView key={routeKey(route, visit)} segment={route.segment} />
           </Suspense>
-        ) : route.view === 'rekrutacja' ? (
+        ) : route.view === 'rekrutacja' || route.view === 'analiza' || route.view === 'slad' ? (
           <Suspense fallback={<ViewLoader label="Ładowanie materiałów…" />}>
-            <RecruitmentView key={routeKey(route, visit)} tab={route.tab} onNavigate={navigate} />
+            <SectionView
+              key={routeKey(route, visit)}
+              section={route.view}
+              tab={route.tab}
+              onNavigate={navigate}
+            />
           </Suspense>
         ) : route.view === 'stanowiska' ? (
           <Suspense fallback={<ViewLoader label="Ładowanie kart stanowiskowych…" />}>
