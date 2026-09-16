@@ -1,10 +1,8 @@
-import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
-import { BookText, Clapperboard, LayoutDashboard, Megaphone, TriangleAlert, LoaderCircle } from 'lucide-react';
-import type { ApplicationStatus, MembershipApplication } from '@/lib/types';
-import { fetchApplications, updateApplication, deleteApplication } from '@/lib/applications';
+import { Suspense, lazy, useCallback, useState } from 'react';
+import { BookText, Clapperboard, LayoutDashboard, Megaphone, UserRoundSearch, LoaderCircle } from 'lucide-react';
 import { ChamberLogo } from '@/components/ChamberLogo';
-import { DashboardView } from '@/components/DashboardView';
-import { ApplicationDrawer } from '@/components/ApplicationDrawer';
+import { PulpitView } from '@/components/pulpit/PulpitView';
+import { routeKey, sameView, type Route, type ViewKey } from '@/lib/route';
 
 // The dossier ships ~320 kB of prose; keep it out of the initial bundle.
 const DossierView = lazy(() =>
@@ -21,90 +19,59 @@ const ConferenceView = lazy(() =>
   import('@/components/conference/ConferenceView').then((m) => ({ default: m.ConferenceView }))
 );
 
-type View = 'dashboard' | 'marketing' | 'konferencje' | 'dossier';
+// The recruitment pages carry the same prose machinery as the dossier.
+const RecruitmentView = lazy(() =>
+  import('@/components/recruitment/RecruitmentView').then((m) => ({ default: m.RecruitmentView }))
+);
+
+const NAV: { key: ViewKey; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { key: 'pulpit', label: 'Pulpit', icon: LayoutDashboard },
+  { key: 'marketing', label: 'Marketing', icon: Megaphone },
+  { key: 'konferencje', label: 'Konferencje', icon: Clapperboard },
+  { key: 'rekrutacja', label: 'Rekrutacja', icon: UserRoundSearch },
+  { key: 'dossier', label: 'Dossier', icon: BookText },
+];
 
 export default function App() {
-  const [view, setView] = useState<View>('dashboard');
-  const [apps, setApps] = useState<MembershipApplication[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<MembershipApplication | null>(null);
+  const [route, setRoute] = useState<Route>({ view: 'pulpit' });
+  /**
+   * Counts navigations, and rides in the mounted view's key.
+   *
+   * Without it a deep link only works once: open the roadmap from the Pulpit,
+   * switch to another tab inside the marketing view, come back and follow the
+   * same link, and nothing would move — the route value is unchanged, so React
+   * keeps the component and its now-stale tab state. Bumping a counter makes
+   * every navigation a remount, which is the one behaviour that is correct in
+   * all four views without each of them reimplementing it.
+   */
+  const [visit, setVisit] = useState(0);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      setApps(await fetchApplications());
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Nie udało się pobrać danych.');
-    } finally {
-      setLoading(false);
-    }
+  const navigate = useCallback((next: Route) => {
+    setRoute(next);
+    setVisit((v) => v + 1);
   }, []);
 
-  useEffect(() => {
-    void load();
-  }, [load]);
-
-  const refreshSelected = (updated: Partial<MembershipApplication>) => {
-    setSelected((s) => (s ? { ...s, ...updated } : s));
+  /* The top nav is a plain view switch: re-clicking the view you are already
+     in should not throw away where you had scrolled to. */
+  const switchView = (key: ViewKey) => {
+    if (sameView(route, { view: key } as Route)) return;
+    navigate({ view: key } as Route);
   };
-
-  async function persist(
-    id: string,
-    patch: Partial<Pick<MembershipApplication, 'status' | 'score' | 'reviewer' | 'notes'>>,
-    optimistic: Partial<MembershipApplication>
-  ) {
-    setApps((list) => list.map((a) => (a.id === id ? { ...a, ...optimistic } : a)));
-    refreshSelected(optimistic);
-    try {
-      await updateApplication(id, patch);
-    } catch {
-      setError('Nie udało się zapisać zmiany — odśwież stronę.');
-      void load();
-    }
-  }
-
-  const handleStatus = (id: string, status: ApplicationStatus) =>
-    persist(id, { status }, { status });
-  const handleScore = (id: string, score: number) =>
-    persist(id, { score: Number.isNaN(score) ? null : score }, { score: Number.isNaN(score) ? null : score });
-  const handleReviewer = (id: string, reviewer: string) =>
-    persist(id, { reviewer: reviewer || null }, { reviewer: reviewer || null });
-  const handleNotes = (id: string, notes: string) => persist(id, { notes }, { notes });
-
-  async function handleDelete(id: string) {
-    setApps((list) => list.filter((a) => a.id !== id));
-    setSelected(null);
-    try {
-      await deleteApplication(id);
-    } catch {
-      setError('Nie udało się usunąć aplikacji.');
-      void load();
-    }
-  }
-
-  const nav: { key: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-    { key: 'dashboard', label: 'Pulpit', icon: LayoutDashboard },
-    { key: 'marketing', label: 'Marketing', icon: Megaphone },
-    { key: 'konferencje', label: 'Konferencje', icon: Clapperboard },
-    { key: 'dossier', label: 'Dossier', icon: BookText },
-  ];
 
   return (
     <div className="min-h-screen chamber-grid">
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-          <ChamberLogo className="h-6 max-w-[35vw] object-contain object-left sm:h-8" />
-          <nav className="flex shrink-0 items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1">
-            {nav.map((item) => (
+          <ChamberLogo className="h-6 max-w-[30vw] object-contain object-left sm:h-8 sm:max-w-[35vw]" />
+          <nav className="flex shrink-0 items-center gap-0.5 rounded-full border border-slate-200 bg-slate-50 p-1 sm:gap-1">
+            {NAV.map((item) => (
               <button
                 key={item.key}
-                onClick={() => setView(item.key)}
+                onClick={() => switchView(item.key)}
                 aria-label={item.label}
-                aria-current={view === item.key ? 'page' : undefined}
-                className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-bold transition-all duration-200 ${
-                  view === item.key
+                aria-current={route.view === item.key ? 'page' : undefined}
+                className={`flex items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-bold transition-all duration-200 sm:px-4 ${
+                  route.view === item.key
                     ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
                     : 'text-chamber-navy hover:bg-slate-100'
                 }`}
@@ -118,65 +85,30 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        {error && view === 'dashboard' && (
-          <div className="card mb-6 flex items-start gap-3 border-rose-200 bg-rose-50 p-4">
-            <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />
-            <div className="flex-1">
-              <p className="text-sm font-bold text-rose-700">Wystąpił problem</p>
-              <p className="text-sm text-rose-600/90">{error}</p>
-            </div>
-            <button onClick={() => void load()} className="btn-secondary px-4 py-1.5 text-xs">
-              Ponów
-            </button>
-          </div>
-        )}
-
-        {view === 'dossier' ? (
+        {route.view === 'pulpit' ? (
+          <PulpitView onNavigate={navigate} />
+        ) : route.view === 'dossier' ? (
           <Suspense fallback={<ViewLoader label="Ładowanie dossier…" />}>
-            <DossierView />
+            <DossierView key={routeKey(route, visit)} page={route.page} refs={route.refs} />
           </Suspense>
-        ) : view === 'marketing' ? (
+        ) : route.view === 'marketing' ? (
           <Suspense fallback={<ViewLoader label="Ładowanie kokpitu…" />}>
-            <MarketingView />
+            <MarketingView key={routeKey(route, visit)} segment={route.segment} />
           </Suspense>
-        ) : view === 'konferencje' ? (
-          <Suspense fallback={<ViewLoader label="Ładowanie konferencji…" />}>
-            <ConferenceView />
+        ) : route.view === 'rekrutacja' ? (
+          <Suspense fallback={<ViewLoader label="Ładowanie materiałów…" />}>
+            <RecruitmentView key={routeKey(route, visit)} tab={route.tab} onNavigate={navigate} />
           </Suspense>
-        ) : loading ? (
-          <ViewLoader label="Ładowanie danych rekrutacji…" />
-        ) : apps.length === 0 && !error ? (
-          <div className="card mx-auto max-w-lg p-10 text-center">
-            <p className="font-display text-xl font-extrabold text-chamber-navy">Brak aplikacji w bazie</p>
-            <p className="mt-2 text-sm text-slate-500">
-              Gdy pojawią się zgłoszenia firm, pojawią się tutaj automatycznie.
-            </p>
-          </div>
         ) : (
-          <DashboardView
-            apps={apps}
-            onSelect={(a) => {
-              setSelected(a);
-            }}
-          />
+          <Suspense fallback={<ViewLoader label="Ładowanie konferencji…" />}>
+            <ConferenceView key={routeKey(route, visit)} mode={route.mode} tab={route.tab} />
+          </Suspense>
         )}
       </main>
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs font-semibold text-slate-400">
-        AI Chamber CEE · Kokpit rekrutacji i dossier rozpoznawcze
+        AI Chamber CEE · Kokpit rekomendacji i dossier rozpoznawcze
       </footer>
-
-      {selected && (
-        <ApplicationDrawer
-          app={selected}
-          onClose={() => setSelected(null)}
-          onStatusChange={handleStatus}
-          onScoreChange={handleScore}
-          onReviewerChange={handleReviewer}
-          onNotesChange={handleNotes}
-          onDelete={handleDelete}
-        />
-      )}
     </div>
   );
 }
