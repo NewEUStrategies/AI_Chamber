@@ -130,6 +130,8 @@ export function PayChart() {
                           ...(b.mid ? [{ label: 'mediana', value: `${plInt(b.mid)} zł` }] : []),
                           { label: 'lokalizacja', value: location.short },
                         ];
+                        const width = Math.max(pos(b.to) - pos(b.from), 0.6);
+                        const labelInside = width >= 14;
                         return (
                           <div
                             key={b.k}
@@ -160,10 +162,23 @@ export function PayChart() {
                               className="absolute inset-y-0 rounded-[3px]"
                               style={{
                                 left: `${pos(b.from)}%`,
-                                width: `${Math.max(pos(b.to) - pos(b.from), 0.6)}%`,
+                                width: `${width}%`,
                                 background: s.fill,
                               }}
                             />
+                            <span
+                              aria-hidden
+                              className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap font-mono text-[9px] font-bold leading-none ${
+                                labelInside ? 'text-white' : 'text-slate-500'
+                              }`}
+                              style={{
+                                left: labelInside ? `${pos(b.to)}%` : `${Math.min(pos(b.to) + 0.7, 85)}%`,
+                                transform: labelInside ? 'translate(-100%, -50%)' : 'translateY(-50%)',
+                                paddingRight: labelInside ? 4 : 0,
+                              }}
+                            >
+                              {plInt(b.from)}–{plInt(b.to)} zł
+                            </span>
                             {/* Mediana badania: kreska w środku pasma, nie osobny słupek. */}
                             {b.mid && (
                               <span
