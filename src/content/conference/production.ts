@@ -186,7 +186,19 @@ export const ROLES = [
  * sign-off loses to one that publishes within the hour, and no amount of
  * quality makes that up.
  */
+/**
+ * Tempo bierze się z uzgodnienia zawczasu, nie z pomijania kogokolwiek.
+ *
+ * Zarząd zatwierdza zakres i zasady raz, przed wydarzeniem — i to jest ta
+ * zgoda, na której stoi cały kalendarz. W dniu zero publikacja idzie w ramach
+ * tego uzgodnienia, więc nikt nie czeka na decyzję, która już zapadła.
+ * Indywidualnie zatwierdzane zostaje to, co wiąże izbę na zewnątrz.
+ */
 export const SPEED_RULE = {
-  skipsApproval: ['relacja z sali', 'post reaktywny na zmianę regulacyjną', 'zdjęcia', 'setka z kuluarów'],
+  /** Uzgodnione z zarządem przed wydarzeniem, publikowane w ustalonych ramach. */
+  preApproved: ['relacja z sali', 'post reaktywny na zmianę regulacyjną', 'zdjęcia', 'setka z kuluarów'],
+  /** Zatwierdzane pojedynczo, bo wiążą izbę na zewnątrz. */
   needsApproval: ['stanowisko', 'cytat imienny', 'liczba'],
+  note:
+    'Zarząd zatwierdza ramy raz, przed wydarzeniem. Dzięki temu relacja z sali wychodzi w godzinę, a nie po weekendzie — nie dlatego, że kogoś pominięto, tylko dlatego, że decyzja zapadła wcześniej.',
 };

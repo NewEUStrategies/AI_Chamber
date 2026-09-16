@@ -216,22 +216,20 @@ export function ConferenceView({
 
           <div className="rounded-[10px] border border-slate-200 px-4 py-3.5">
             <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Reguła szybkości
+              Tryb uzgodniony z wyprzedzeniem
             </p>
             <dl className="mt-2.5 space-y-2.5 text-[12.5px] leading-[1.6]">
               <div>
-                <dt className="font-bold text-chamber-navy">Nie przechodzi przez akceptację zarządu</dt>
-                <dd className="text-slate-600">{SPEED_RULE.skipsApproval.join(' · ')}</dd>
+                <dt className="font-bold text-chamber-navy">Zakres uzgodniony przed wydarzeniem</dt>
+                <dd className="text-slate-600">{SPEED_RULE.preApproved.join(' · ')}</dd>
               </div>
               <div>
-                <dt className="font-bold text-chamber-navy">Podlega zatwierdzeniu</dt>
+                <dt className="font-bold text-chamber-navy">Zatwierdzane pojedynczo</dt>
                 <dd className="text-slate-600">{SPEED_RULE.needsApproval.join(' · ')}</dd>
               </div>
             </dl>
             <p className="mt-3 border-t border-slate-100 pt-2.5 text-[12px] leading-[1.6] text-slate-500">
-              Zatwierdzeniu podlega stanowisko, cytat imienny i liczba — nie post. Organizacja, w której
-              relacja z sali czeka na akceptację, przegrywa z organizacją publikującą w godzinę, i żadna
-              jakość tego nie nadrabia.
+              {SPEED_RULE.note}
             </p>
           </div>
         </div>
