@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback, useState } from 'react';
-import { BookText, Clapperboard, LayoutDashboard, Megaphone, UserRoundSearch, LoaderCircle } from 'lucide-react';
+import { BookText, Clapperboard, IdCard, LayoutDashboard, Megaphone, UserRoundSearch, LoaderCircle } from 'lucide-react';
 import { ChamberLogo } from '@/components/ChamberLogo';
 import { PulpitView } from '@/components/pulpit/PulpitView';
 import { routeKey, sameView, type Route, type ViewKey } from '@/lib/route';
@@ -24,11 +24,17 @@ const RecruitmentView = lazy(() =>
   import('@/components/recruitment/RecruitmentView').then((m) => ({ default: m.RecruitmentView }))
 );
 
+// Karty stanowiskowe: pięć kart, macierz, wykres płacowy i kalkulator.
+const StanowiskaView = lazy(() =>
+  import('@/components/stanowiska/StanowiskaView').then((m) => ({ default: m.StanowiskaView }))
+);
+
 const NAV: { key: ViewKey; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { key: 'pulpit', label: 'Pulpit', icon: LayoutDashboard },
   { key: 'marketing', label: 'Marketing', icon: Megaphone },
   { key: 'konferencje', label: 'Konferencje', icon: Clapperboard },
   { key: 'rekrutacja', label: 'Rekrutacja', icon: UserRoundSearch },
+  { key: 'stanowiska', label: 'Stanowiska', icon: IdCard },
   { key: 'dossier', label: 'Dossier', icon: BookText },
 ];
 
@@ -62,15 +68,15 @@ export default function App() {
     <div className="min-h-screen chamber-grid">
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-          <ChamberLogo className="h-6 max-w-[30vw] object-contain object-left sm:h-8 sm:max-w-[35vw]" />
-          <nav className="flex shrink-0 items-center gap-0.5 rounded-full border border-slate-200 bg-slate-50 p-1 sm:gap-1">
+          <ChamberLogo className="h-6 max-w-[24vw] object-contain object-left sm:h-8 sm:max-w-[35vw]" />
+          <nav className="flex max-w-full shrink items-center gap-0.5 overflow-x-auto rounded-full border border-slate-200 bg-slate-50 p-1 sm:shrink-0 sm:gap-1">
             {NAV.map((item) => (
               <button
                 key={item.key}
                 onClick={() => switchView(item.key)}
                 aria-label={item.label}
                 aria-current={route.view === item.key ? 'page' : undefined}
-                className={`flex items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-bold transition-all duration-200 sm:px-4 ${
+                className={`flex shrink-0 items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-bold transition-all duration-200 sm:px-4 ${
                   route.view === item.key
                     ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
                     : 'text-chamber-navy hover:bg-slate-100'
@@ -98,6 +104,10 @@ export default function App() {
         ) : route.view === 'rekrutacja' ? (
           <Suspense fallback={<ViewLoader label="Ładowanie materiałów…" />}>
             <RecruitmentView key={routeKey(route, visit)} tab={route.tab} onNavigate={navigate} />
+          </Suspense>
+        ) : route.view === 'stanowiska' ? (
+          <Suspense fallback={<ViewLoader label="Ładowanie kart stanowiskowych…" />}>
+            <StanowiskaView key={routeKey(route, visit)} tab={route.tab} />
           </Suspense>
         ) : (
           <Suspense fallback={<ViewLoader label="Ładowanie konferencji…" />}>

@@ -16,12 +16,22 @@ export type MarketingSegment = 'lejek' | 'kim' | 'kanaly' | 'aktywa' | 'roadmapa
 /** The proposed-actions channels on the conference page. */
 export type PlanKey = 'social' | 'email' | 'www' | 'mediapack';
 
+/** Sekcje kart stanowiskowych. */
+export type StanowiskaTab =
+  | 'przeglad'
+  | 'karty'
+  | 'macierz'
+  | 'place'
+  | 'specjalistyczne'
+  | 'zrodla';
+
 export type Route =
   | { view: 'pulpit' }
   | { view: 'marketing'; segment?: MarketingSegment }
   | { view: 'konferencje'; mode?: 'material'; tab?: ArtifactKey }
   | { view: 'konferencje'; mode: 'plan'; tab?: PlanKey }
   | { view: 'rekrutacja'; tab?: RecruitmentTab }
+  | { view: 'stanowiska'; tab?: StanowiskaTab }
   /**
    * `refs` carries bibliography entries to reveal on arrival. The recruitment
    * pages keep their footnotes but the bibliography stays in the dossier, so a
@@ -45,6 +55,7 @@ export function routeKey(route: Route, visit: number): string {
   if (route.view === 'marketing') parts.push(route.segment ?? '');
   if (route.view === 'konferencje') parts.push(route.mode ?? '', route.tab ?? '');
   if (route.view === 'rekrutacja') parts.push(route.tab ?? '');
+  if (route.view === 'stanowiska') parts.push(route.tab ?? '');
   if (route.view === 'dossier') parts.push(route.page ?? '', (route.refs ?? []).join(','));
   return `${parts.join(':')}#${visit}`;
 }
