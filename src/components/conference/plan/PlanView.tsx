@@ -5,9 +5,8 @@ import { MediaPackPanel } from './MediaPackPanel';
 import { SocialPanel } from './SocialPanel';
 import { WebsitePanel } from './WebsitePanel';
 import { PLAN_ACCENT } from '../tokens';
+import type { PlanKey } from '@/lib/route';
 
-
-type PlanKey = 'social' | 'email' | 'www' | 'mediapack';
 
 const TABS: {
   key: PlanKey;
@@ -65,8 +64,8 @@ const TABS: {
  * archived posts in the dossier data, so a correction there corrects the
  * recommendation. What this section owns is the judgement.
  */
-export function PlanView() {
-  const [active, setActive] = useState<PlanKey>('social');
+export function PlanView({ channel }: { channel?: PlanKey } = {}) {
+  const [active, setActive] = useState<PlanKey>(channel ?? 'social');
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
   const current = TABS.find((t) => t.key === active) ?? TABS[0];
 

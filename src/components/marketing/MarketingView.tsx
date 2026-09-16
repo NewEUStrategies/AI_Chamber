@@ -10,6 +10,7 @@ import { IcpMap } from './IcpMap';
 import { RoadmapBoard } from './RoadmapBoard';
 import { Card, StatTile } from './primitives';
 import { SERIES, STATUS } from './palette';
+import type { MarketingSegment } from '@/lib/route';
 
 const SEGMENTS_NAV: { id: string; label: string; render: () => ReactNode }[] = [
   { id: 'lejek', label: 'Lejek', render: () => <FunnelSegment /> },
@@ -26,8 +27,11 @@ const SEGMENTS_NAV: { id: string; label: string; render: () => ReactNode }[] = [
  * different sittings: the funnel is the argument, the roadmap is the answer,
  * and the asset ledger is the part a reviewer will want to challenge.
  */
-export function MarketingView() {
-  const [active, setActive] = useState(SEGMENTS_NAV[0].id);
+export function MarketingView({ segment }: { segment?: MarketingSegment } = {}) {
+  /* The initial segment comes from the route. It is read once, at mount: the
+     view is keyed on its destination, so a second deep link to the same tab
+     arrives as a fresh mount rather than as a prop change to reconcile. */
+  const [active, setActive] = useState<string>(segment ?? SEGMENTS_NAV[0].id);
   const current = SEGMENTS_NAV.find((s) => s.id === active) ?? SEGMENTS_NAV[0];
 
   return (
