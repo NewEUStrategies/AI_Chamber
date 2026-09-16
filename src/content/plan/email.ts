@@ -154,7 +154,7 @@ export const EMAIL_WATCH = {
 export const EMAIL_ORDER: Section[] = [
   { name: 'Higiena techniczna', what: 'Sześć pozycji poniżej', why: 'Warunek wstępny. Bez tego reszta nie dociera.' },
   {
-    name: 'Jedna lista',
+    name: 'Jedna platforma CRM, w tym do komunikacji newsletterowej',
     what: 'Ustalić, gdzie schodzą się zapisy z czterech wejść',
     why: 'Od odpowiedzi zależy, czy to praca nad integracją, czy już tylko nad segmentacją.',
   },

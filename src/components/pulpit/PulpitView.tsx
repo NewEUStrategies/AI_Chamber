@@ -30,7 +30,7 @@ export function PulpitView({ onNavigate }: { onNavigate: (to: Route) => void }) 
     <div className="animate-fade-up space-y-6">
       <header>
         <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-chamber-green-deep">
-          Pulpit · AI Chamber CEE
+          Rekrutacja · AI Chamber CEE
         </p>
         <h1 className="mt-2 max-w-3xl font-display text-[30px] font-extrabold leading-[1.12] text-chamber-navy sm:text-[38px]">
           Stan aktualny obok rekomendacji

@@ -28,7 +28,12 @@ export function Card({
           {kicker}
         </p>
       )}
-      <h3 className="font-display text-[17px] font-extrabold leading-tight text-chamber-navy">{title}</h3>
+      <h3
+        className="font-display text-[17px] font-extrabold leading-tight text-chamber-navy"
+        title={title === 'Segmenty ICP — dopasowanie' ? 'ICP to Ideal Customer Profile — opis grupy odbiorców, dla której oferta najlepiej pasuje.' : undefined}
+      >
+        {title}
+      </h3>
       {lead && <p className="mt-2 text-[13.5px] leading-[1.65] text-slate-600">{lead}</p>}
       <div className="mt-5">{children}</div>
       {note && <p className="mt-4 border-t border-slate-100 pt-3 text-[12px] leading-[1.6] text-slate-500">{note}</p>}

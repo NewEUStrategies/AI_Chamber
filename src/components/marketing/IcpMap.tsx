@@ -17,7 +17,7 @@ const WEIGHT: Record<BuyingRole['weight'], { color: string; hint: string }> = {
 
 /** Reach is a state, not a series — it borrows the reserved status tokens. */
 const REACH = {
-  yes: { color: STATUS.dziala.fill, label: 'dosięgamy' },
+  yes: { color: STATUS.dziala.fill, label: 'dosięga' },
   no: { color: STATUS.brak.fill, label: 'poza zasięgiem' },
 } as const;
 
@@ -127,14 +127,14 @@ function BuyingCentre({ roles }: { roles: BuyingRole[] }) {
   return (
     <Card
       kicker="Centrum zakupowe"
-      title="Kto decyduje i czy go dziś dosięgamy"
+      title="Kto decyduje i czy go dziś dosięga"
       lead={`${roles.length === 5 ? 'Pięć ról przechodzi' : `${roles.length} ról przechodzi`} przez każdą decyzję o członkostwie. Rola bez kanału kontaktu to nie luka w tabeli — to decyzja podejmowana bez nas.`}
       note="Kolor znacznika oznacza rolę w decyzji; zasięg zawsze niesie etykietę tekstową, nigdy sam kolor."
     >
       <Legend items={parts.map((p) => ({ label: p.label, color: p.color }))} />
 
       <p className="text-[12.5px] leading-[1.6] text-slate-600">
-        AI Chamber dosięga{' '}
+        AI Chamber dosięga do{' '}
         <b className="text-chamber-navy">
           {reached} z {roles.length} ról
         </b>{' '}

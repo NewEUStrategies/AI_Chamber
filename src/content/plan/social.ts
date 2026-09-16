@@ -24,7 +24,7 @@ export const CHANNEL_DECISIONS: ChannelDecision[] = [
     body:
       'Dwanaście postów, dziesięć reakcji łącznie, cisza przez własny szczyt, zero opinii — a strona jest podlinkowana z witryny. Potencjalny członek sprawdzający organizację przed opłaceniem składki widzi dowód przeciwko ofercie.',
     actions: [
-      'Zamknięcie: usunąć link z witryny, zarchiwizować stronę.',
+      'Aktywizacja przez grupy Facebook.',
       'Albo właściciel i rytm tygodniowy, z treścią pisaną pod platformę.',
       'Jeśli zostaje — własne kadry zamiast przeklejek. Ślad „hashtag#AIChamber” w poście z 5 sierpnia pokazuje kopiowanie z LinkedIna bez przeczytania.',
     ],
