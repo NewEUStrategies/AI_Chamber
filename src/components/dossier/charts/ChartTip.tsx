@@ -1,34 +1,41 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { TipState } from './useChartTip';
 
+const GAP = 14;
+
 /**
- * Fixed-position readout for chart hovers. Anchored to the viewport like the
- * `.term` tooltips so scroll containers can never clip it; flips below the
- * cursor near the top edge and stays inside the horizontal window bounds.
+ * Cursor-following readout for chart hovers, portaled to document.body —
+ * ancestors with transforms (e.g. the page fade-in) would otherwise become
+ * the containing block and displace the tooltip. Sits right of the cursor,
+ * flips to the left near the right edge and below near the top edge.
  */
 export function ChartTip({ tip }: { tip: TipState | null }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
 
   useLayoutEffect(() => {
     if (!tip) {
-      setPos(null);
+      setSize(null);
       return;
     }
     const el = ref.current;
     if (!el) return;
-    const w = el.offsetWidth;
-    const h = el.offsetHeight;
-    const below = tip.y - h - 14 < 8;
-    setPos({
-      left: Math.min(Math.max(tip.x - w / 2, 8), window.innerWidth - w - 8),
-      top: below ? tip.y + 14 : tip.y - h - 14,
-    });
+    setSize({ w: el.offsetWidth, h: el.offsetHeight });
   }, [tip]);
 
   if (!tip) return null;
-  const style = pos ? { left: pos.left, top: pos.top } : { left: tip.x, top: tip.y, opacity: 0 };
-  return (
+  const w = size?.w ?? 160;
+  const h = size?.h ?? 60;
+  const flipX = tip.x + GAP + w > window.innerWidth - 8;
+  const below = tip.y - h - GAP < 8;
+  const left = flipX ? tip.x - GAP - w : tip.x + GAP;
+  const top = below ? tip.y + GAP : tip.y - h - GAP;
+  const anchored = size !== null;
+  const style = anchored
+    ? { left, top }
+    : { left: tip.x + GAP, top: tip.y + GAP, opacity: 0 };
+  return createPortal(
     <div ref={ref} className="chart-tip" style={style} role="status">
       {tip.title && <span className="t">{tip.title}</span>}
       {tip.rows.map((r) => (
@@ -38,6 +45,7 @@ export function ChartTip({ tip }: { tip: TipState | null }) {
           <b>{r.value}</b>
         </span>
       ))}
-    </div>
+    </div>,
+    document.body
   );
 }

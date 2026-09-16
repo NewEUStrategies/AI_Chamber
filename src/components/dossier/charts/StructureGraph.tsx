@@ -89,7 +89,37 @@ export function StructureGraph() {
                 setActive(n.id);
                 tip.show(
                   e,
-                  [{ label: 'opis', value: n.sub }],
+                  [
+                    { label: 'rola', value: n.sub },
+                    {
+                      label: 'rodzaj',
+                      value:
+                        n.kind === 'core'
+                          ? 'podmiot docelowy'
+                          : n.kind === 'related'
+                            ? 'podmiot powiązany'
+                            : 'organ / zespół',
+                    },
+                  ],
+                  n.title.join(' ')
+                );
+              }}
+              onMouseMove={(e) => {
+                setActive(n.id);
+                tip.show(
+                  e,
+                  [
+                    { label: 'rola', value: n.sub },
+                    {
+                      label: 'rodzaj',
+                      value:
+                        n.kind === 'core'
+                          ? 'podmiot docelowy'
+                          : n.kind === 'related'
+                            ? 'podmiot powiązany'
+                            : 'organ / zespół',
+                    },
+                  ],
                   n.title.join(' ')
                 );
               }}
