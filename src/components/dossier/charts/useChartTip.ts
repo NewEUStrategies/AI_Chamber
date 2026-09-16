@@ -29,8 +29,25 @@ export function useChartTip() {
     if (!visible) return;
     const move = (e: PointerEvent) =>
       setTip((t) => (t ? { ...t, x: e.clientX, y: e.clientY } : t));
+    /*
+     * Zmiana rozmiaru okna unieważnia kotwicę: `x`/`y` są współrzędnymi
+     * viewportu sprzed zmiany, a dymek przykleja się do krawędzi policzonych
+     * ze starych wymiarów. Chowamy go, zamiast pokazywać w miejscu, które
+     * przestało cokolwiek wskazywać. Dotyczy to głównie obrotu telefonu przy
+     * dymku otwartym z klawiatury — wskaźnik myszy sam by go odświeżył.
+     *
+     * Świadomie bez nasłuchu `scroll`: przeglądarka przewija element przy
+     * nadaniu mu fokusu, więc chowanie dymka na przewinięcie gasiłoby dymek
+     * wywołany klawiszem Tab. Przy przewijaniu myszą element pod kursorem się
+     * zmienia, co i tak wyzwala `pointerleave` i chowa dymek.
+     */
+    const drop = () => setTip(null);
     window.addEventListener('pointermove', move);
-    return () => window.removeEventListener('pointermove', move);
+    window.addEventListener('resize', drop);
+    return () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('resize', drop);
+    };
   }, [visible]);
 
   return {

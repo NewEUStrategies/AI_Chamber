@@ -4,12 +4,16 @@ import type { ApplicationStatus, MembershipApplication } from '@/lib/types';
 import { fetchApplications, updateApplication, deleteApplication } from '@/lib/applications';
 import { ChamberLogo } from '@/components/ChamberLogo';
 import { DashboardView } from '@/components/DashboardView';
-import { MarketingView } from '@/components/marketing/MarketingView';
 import { ApplicationDrawer } from '@/components/ApplicationDrawer';
 
 // The dossier ships ~320 kB of prose; keep it out of the initial bundle.
 const DossierView = lazy(() =>
   import('@/components/dossier/DossierView').then((m) => ({ default: m.DossierView }))
+);
+
+// The marketing cockpit carries its own charts; keep it out of the initial bundle too.
+const MarketingView = lazy(() =>
+  import('@/components/marketing/MarketingView').then((m) => ({ default: m.MarketingView }))
 );
 
 type View = 'dashboard' | 'marketing' | 'dossier';
@@ -108,7 +112,7 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        {error && view !== 'dossier' && (
+        {error && view === 'dashboard' && (
           <div className="card mb-6 flex items-start gap-3 border-rose-200 bg-rose-50 p-4">
             <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />
             <div className="flex-1">
@@ -126,7 +130,9 @@ export default function App() {
             <DossierView />
           </Suspense>
         ) : view === 'marketing' ? (
-          <MarketingView />
+          <Suspense fallback={<ViewLoader label="Ładowanie kokpitu…" />}>
+            <MarketingView />
+          </Suspense>
         ) : loading ? (
           <ViewLoader label="Ładowanie danych rekrutacji…" />
         ) : apps.length === 0 && !error ? (
@@ -136,14 +142,14 @@ export default function App() {
               Gdy pojawią się zgłoszenia firm, pojawią się tutaj automatycznie.
             </p>
           </div>
-        ) : view === 'dashboard' ? (
+        ) : (
           <DashboardView
             apps={apps}
             onSelect={(a) => {
               setSelected(a);
             }}
           />
-        ) : null}
+        )}
       </main>
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs font-semibold text-slate-400">
