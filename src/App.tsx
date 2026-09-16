@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
-import { BookText, LayoutDashboard, Megaphone, TriangleAlert, LoaderCircle } from 'lucide-react';
+import { BookText, Clapperboard, LayoutDashboard, Megaphone, TriangleAlert, LoaderCircle } from 'lucide-react';
 import type { ApplicationStatus, MembershipApplication } from '@/lib/types';
 import { fetchApplications, updateApplication, deleteApplication } from '@/lib/applications';
 import { ChamberLogo } from '@/components/ChamberLogo';
@@ -16,7 +16,12 @@ const MarketingView = lazy(() =>
   import('@/components/marketing/MarketingView').then((m) => ({ default: m.MarketingView }))
 );
 
-type View = 'dashboard' | 'marketing' | 'dossier';
+// Same for the conference view: seven panels, each with its own visualisation.
+const ConferenceView = lazy(() =>
+  import('@/components/conference/ConferenceView').then((m) => ({ default: m.ConferenceView }))
+);
+
+type View = 'dashboard' | 'marketing' | 'konferencje' | 'dossier';
 
 export default function App() {
   const [view, setView] = useState<View>('dashboard');
@@ -82,6 +87,7 @@ export default function App() {
   const nav: { key: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'dashboard', label: 'Pulpit', icon: LayoutDashboard },
     { key: 'marketing', label: 'Marketing', icon: Megaphone },
+    { key: 'konferencje', label: 'Konferencje', icon: Clapperboard },
     { key: 'dossier', label: 'Dossier', icon: BookText },
   ];
 
@@ -132,6 +138,10 @@ export default function App() {
         ) : view === 'marketing' ? (
           <Suspense fallback={<ViewLoader label="Ładowanie kokpitu…" />}>
             <MarketingView />
+          </Suspense>
+        ) : view === 'konferencje' ? (
+          <Suspense fallback={<ViewLoader label="Ładowanie konferencji…" />}>
+            <ConferenceView />
           </Suspense>
         ) : loading ? (
           <ViewLoader label="Ładowanie danych rekrutacji…" />
