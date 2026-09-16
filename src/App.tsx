@@ -53,6 +53,7 @@ const NAV: { key: ViewKey; label: string; icon: React.ComponentType<{ className?
 
 export default function App() {
   const [route, setRoute] = useState<Route>({ view: 'pulpit' });
+  const [hoveredNav, setHoveredNav] = useState<ViewKey | null>(null);
   /**
    * Counts navigations, and rides in the mounted view's key.
    *
@@ -88,24 +89,39 @@ export default function App() {
          */}
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
           <ChamberLogo className="h-6 shrink-0 object-contain object-left sm:h-8" />
-          <nav className="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-slate-200 bg-slate-50 p-1 xl:gap-1">
-            {NAV.map((item) => (
-              <button
-                key={item.key}
-                onClick={() => switchView(item.key)}
-                aria-label={item.label}
-                aria-current={route.view === item.key ? 'page' : undefined}
-                title={item.label}
-                className={`flex shrink-0 items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-bold transition-all duration-200 xl:px-3.5 ${
-                  route.view === item.key
-                    ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
-                    : 'text-chamber-navy hover:bg-slate-100'
-                }`}
-              >
-                <item.icon className="h-4 w-4" />
-                <span className="hidden xl:inline">{item.label}</span>
-              </button>
-            ))}
+          <nav
+            onMouseLeave={() => setHoveredNav(null)}
+            className="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-slate-200 bg-slate-50 p-1 xl:gap-1"
+          >
+            {NAV.map((item) => {
+              const isExpanded = (hoveredNav ?? route.view) === item.key;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => switchView(item.key)}
+                  onMouseEnter={() => setHoveredNav(item.key)}
+                  aria-label={item.label}
+                  aria-current={route.view === item.key ? 'page' : undefined}
+                  title={item.label}
+                  className={`flex shrink-0 items-center rounded-full px-2.5 py-1.5 text-sm font-bold transition-all duration-200 xl:px-3.5 ${
+                    isExpanded ? 'gap-2' : 'gap-0'
+                  } ${
+                    route.view === item.key
+                      ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
+                      : 'text-chamber-navy hover:bg-slate-100'
+                  }`}
+                >
+                  <item.icon className="h-4 w-4 shrink-0" />
+                  <span
+                    className={`overflow-hidden whitespace-nowrap transition-all duration-200 ${
+                      isExpanded ? 'max-w-[10rem] opacity-100' : 'max-w-0 opacity-0'
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
           </nav>
         </div>
       </header>
