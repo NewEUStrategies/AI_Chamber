@@ -21,3 +21,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Zrzuty weryfikacyjne z Playwrighta - artefakty testowe, nie materiał źródłowy.
+# Materiały do dossier trzymamy w research/screenshots/.
+shots
