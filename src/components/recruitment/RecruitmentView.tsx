@@ -10,6 +10,9 @@ import {
 } from '@/content/dossier/split';
 import type { Route } from '@/lib/route';
 
+const RESTRICTED_TABS = new Set<RecruitmentTab>(['rozmowa', 'pitch']);
+const RECRUITMENT_PASSWORD = 'RozmowAI+';
+
 /**
  * Rekrutacja — the five candidate-facing pages, moved out of the dossier.
  *
@@ -32,8 +35,11 @@ export function RecruitmentView({
   onNavigate: (to: Route) => void;
 }) {
   const [active, setActive] = useState<string>(
-    tab && RECRUITMENT_PAGES.some((p) => p.id === tab) ? tab : RECRUITMENT_PAGES[0].id
+    tab && RECRUITMENT_PAGES.some((p) => p.id === tab) && !RESTRICTED_TABS.has(tab)
+      ? tab
+      : RECRUITMENT_PAGES[0].id
   );
+  const [unlocked, setUnlocked] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const firstPaint = useRef(true);
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -83,6 +89,15 @@ export function RecruitmentView({
     contentRef.current?.scrollIntoView({ block: 'start' });
   }, [active]);
 
+  const selectTab = (next: string) => {
+    if (RESTRICTED_TABS.has(next) && !unlocked) {
+      const password = window.prompt('Ta strona jest chroniona. Podaj hasło:');
+      if (password !== RECRUITMENT_PASSWORD) return;
+      setUnlocked(true);
+    }
+    setActive(next);
+  };
+
   const move = (e: KeyboardEvent<HTMLDivElement>) => {
     const ids = RECRUITMENT_PAGES.map((p) => p.id);
     let next = index;
@@ -92,7 +107,7 @@ export function RecruitmentView({
     else if (e.key === 'End') next = ids.length - 1;
     else return;
     e.preventDefault();
-    setActive(ids[next]);
+    selectTab(ids[next]);
     refs.current[ids[next]]?.focus();
   };
 
@@ -132,7 +147,7 @@ export function RecruitmentView({
               aria-selected={on}
               aria-controls={`rk-panel-${p.id}`}
               tabIndex={on ? 0 : -1}
-              onClick={() => setActive(p.id)}
+              onClick={() => selectTab(p.id)}
               className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-bold transition-colors ${
                 on
                   ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
