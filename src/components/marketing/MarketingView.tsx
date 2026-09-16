@@ -44,8 +44,8 @@ export function MarketingView({ segment }: { segment?: MarketingSegment } = {}) 
           Realny kapitał polityczny i lejek, którego nikt nie zbudował
         </h1>
         <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
-          Diagnoza marketingu izby oparta na danych z dossier: ruchu obu domen, profilu
-          wyszukiwarkowego i siedemdziesięciu zrzutów obu kanałów społecznościowych. Tam, gdzie
+          Diagnoza marketingu izby oparta na pomiarach ze strony „Ślad cyfrowy”: ruchu obu domen,
+          profilu wyszukiwarkowego i siedemdziesięciu zrzutów obu kanałów społecznościowych. Tam, gdzie
           z zewnątrz nie da się nic ustalić, napisane jest <b>nieznane</b> — zamiast domysłu
           podanego jako wniosek. Ocen nie naciągam w żadną stronę: to, co działa, jest tu
           nazwane równie wyraźnie jak to, co nie działa.

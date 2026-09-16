@@ -1,43 +1,52 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type FormEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+} from 'react';
 import { BookMarked, ExternalLink, Lock, X } from 'lucide-react';
 import { DossierBlocks } from '@/components/dossier/DossierBlocks';
 import { DossierHtml } from '@/components/dossier/DossierHtml';
 import { useTermTooltipPositioning } from '@/components/dossier/useTermTooltipPositioning';
 import {
-  RECRUITMENT_PAGES,
+  SECTION_PAGES,
   SOURCES_PAGE_ID,
-  type RecruitmentTab,
+  sectionByKey,
+  type SectionKey,
 } from '@/content/dossier/split';
 import type { Route } from '@/lib/route';
 
-const RESTRICTED_TABS = new Set<RecruitmentTab>(['rozmowa', 'pitch']);
-const RECRUITMENT_PASSWORD = 'RozmowAI+';
-
 /**
- * Rekrutacja — the five candidate-facing pages, moved out of the dossier.
+ * Sekcja dossier stojąca jako osobna strona.
  *
- * They were the last third of a fifteen-page document and they answer a
- * different question from the rest of it: the dossier is reconnaissance on the
- * organisation, these are preparation for a conversation with it. Read in one
- * sitting, in this order — who I am, what is on offer, how I fit, what I will
- * be asked, and the thirty seconds that has to land first — they are a
- * different document, so they get their own page and their own tabs.
+ * Trzy grupy stron wyszły z dossier, bo odpowiadają na inne pytania niż
+ * reszta, i wszystkie trzy potrzebują dokładnie tego samego: zakładek,
+ * nagłówka i działających przypisów. Jeden komponent zamiast trzech kopii
+ * oznacza też, że poprawka w mechanice przypisów działa od razu wszędzie.
  *
- * The bibliography stays in the dossier, because it serves all fifteen pages.
- * A footnote marker here therefore becomes a cross-view jump: the same click
- * as before, landing on the same entry, one view over.
+ * Bibliografia została w dossier, bo obsługuje wszystkie piętnaście stron.
+ * Odsyłacz jest więc skokiem między widokami: to samo kliknięcie, ta sama
+ * podświetlona pozycja, jeden widok obok.
+ *
+ * Hasło na wybranych zakładkach jest cechą sekcji, a nie komponentu: dziś
+ * ma je tylko rekrutacja, ale bramka nie musi o tym wiedzieć.
  */
-export function RecruitmentView({
+export function SectionView({
+  section: key,
   tab,
   onNavigate,
 }: {
-  tab?: RecruitmentTab;
+  section: SectionKey;
+  tab?: string;
   onNavigate: (to: Route) => void;
 }) {
+  const section = sectionByKey(key);
+  const pages = SECTION_PAGES[key];
+  const restricted = new Set(section.restricted ?? []);
   const [active, setActive] = useState<string>(
-    tab && RECRUITMENT_PAGES.some((p) => p.id === tab) && !RESTRICTED_TABS.has(tab)
-      ? tab
-      : RECRUITMENT_PAGES[0].id
+    tab && pages.some((p) => p.id === tab) && !restricted.has(tab) ? tab : pages[0].id
   );
   const [unlocked, setUnlocked] = useState(false);
   const [gate, setGate] = useState<{ tab: string; error: boolean } | null>(null);
@@ -47,14 +56,9 @@ export function RecruitmentView({
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
   useTermTooltipPositioning();
 
-  const index = Math.max(0, RECRUITMENT_PAGES.findIndex((p) => p.id === active));
-  const page = RECRUITMENT_PAGES[index];
+  const index = Math.max(0, pages.findIndex((p) => p.id === active));
+  const page = pages[index];
 
-  /**
-   * Footnote markers still work, they just land one view over. The reveal
-   * logic lives in the dossier and is driven by the route, so this side only
-   * has to name the entries it wants opened.
-   */
   const jumpToSource = useCallback(
     (el: HTMLElement | null) => {
       const marker = el?.closest<HTMLElement>('sup.fn[data-refs]');
@@ -82,7 +86,7 @@ export function RecruitmentView({
     [jumpToSource]
   );
 
-  /* A tab change starts at the top of the page it opened. */
+  /* Zmiana zakładki zaczyna od góry otwartej strony. */
   useEffect(() => {
     if (firstPaint.current) {
       firstPaint.current = false;
@@ -91,37 +95,25 @@ export function RecruitmentView({
     contentRef.current?.scrollIntoView({ block: 'start' });
   }, [active]);
 
+  useEffect(() => {
+    if (!gate) return;
+    gateInputRef.current?.focus();
+  }, [gate]);
+
+  /* Zakładka chroniona otwiera bramkę zamiast treści, dopóki hasło nie padnie. */
   const selectTab = (next: string) => {
-    if (RESTRICTED_TABS.has(next as RecruitmentTab) && !unlocked) {
+    if (restricted.has(next) && !unlocked) {
       setGate({ tab: next, error: false });
       return;
     }
     setActive(next);
   };
 
-  const move = (e: KeyboardEvent<HTMLDivElement>) => {
-    const ids = RECRUITMENT_PAGES.map((p) => p.id);
-    let next = index;
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (index + 1) % ids.length;
-    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (index - 1 + ids.length) % ids.length;
-    else if (e.key === 'Home') next = 0;
-    else if (e.key === 'End') next = ids.length - 1;
-    else return;
-    e.preventDefault();
-    selectTab(ids[next]);
-    refs.current[ids[next]]?.focus();
-  };
-
-  useEffect(() => {
-    if (!gate) return;
-    gateInputRef.current?.focus();
-  }, [gate]);
-
   const submitGate = (e: FormEvent) => {
     e.preventDefault();
     const input = gateInputRef.current;
     if (!input || !gate) return;
-    if (input.value === RECRUITMENT_PASSWORD) {
+    if (section.password && input.value === section.password) {
       setUnlocked(true);
       setActive(gate.tab);
       setGate(null);
@@ -133,30 +125,41 @@ export function RecruitmentView({
 
   const closeGate = () => setGate(null);
 
+  const move = (e: KeyboardEvent<HTMLDivElement>) => {
+    const ids = pages.map((p) => p.id);
+    let next = index;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (index + 1) % ids.length;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (index - 1 + ids.length) % ids.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = ids.length - 1;
+    else return;
+    e.preventDefault();
+    selectTab(ids[next]);
+    refs.current[ids[next]]?.focus();
+  };
+
   return (
     <div className="dossier animate-fade-up">
       <header className="mb-6">
         <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-chamber-green-deep">
-          Rekrutacja · przygotowanie do rozmowy
+          {section.kicker}
         </p>
         <h1 className="mt-2 max-w-3xl font-display text-[30px] font-extrabold leading-[1.12] text-chamber-navy sm:text-[38px]">
-          Pięć stron, które czyta się przed rozmową
+          {section.title}
         </h1>
         <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
-          Wydzielone z dossier, bo odpowiadają na inne pytanie: dossier jest rozpoznaniem organizacji,
-          to jest przygotowaniem do rozmowy z nią. Kolejność zakładek jest kolejnością czytania.
-          Bibliografia została w dossier — odsyłacz w tekście przenosi do niej i podświetla pozycję,
-          którą cytuje.
+          {section.lead} Bibliografia została w dossier — odsyłacz w tekście przenosi do niej
+          i podświetla pozycję, którą cytuje.
         </p>
       </header>
 
       <div
         role="tablist"
-        aria-label="Strony rekrutacyjne"
+        aria-label={`Strony sekcji ${section.navLabel}`}
         onKeyDown={move}
         className="flex flex-wrap gap-1.5"
       >
-        {RECRUITMENT_PAGES.map((p) => {
+        {pages.map((p) => {
           const on = p.id === active;
           return (
             <button
@@ -165,9 +168,9 @@ export function RecruitmentView({
                 refs.current[p.id] = el;
               }}
               role="tab"
-              id={`rk-tab-${p.id}`}
+              id={`sec-tab-${p.id}`}
               aria-selected={on}
-              aria-controls={`rk-panel-${p.id}`}
+              aria-controls={`sec-panel-${p.id}`}
               tabIndex={on ? 0 : -1}
               onClick={() => selectTab(p.id)}
               className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-bold transition-colors ${
@@ -176,9 +179,7 @@ export function RecruitmentView({
                   : 'border border-slate-200 text-chamber-navy hover:bg-slate-50'
               }`}
             >
-              <span className={`font-mono text-[10px] ${on ? 'text-white/60' : 'text-slate-400'}`}>
-                {p.num}
-              </span>
+              <span className={`font-mono text-[10px] ${on ? 'text-white/60' : 'text-slate-400'}`}>{p.num}</span>
               {p.navLabel}
             </button>
           );
@@ -187,8 +188,8 @@ export function RecruitmentView({
 
       <div
         role="tabpanel"
-        id={`rk-panel-${page.id}`}
-        aria-labelledby={`rk-tab-${page.id}`}
+        id={`sec-panel-${page.id}`}
+        aria-labelledby={`sec-tab-${page.id}`}
         tabIndex={0}
         className="dossier-content mt-6 outline-none"
       >
@@ -218,8 +219,8 @@ export function RecruitmentView({
 
         <p className="mt-10 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-6 text-xs text-slate-400">
           <BookMarked className="h-3.5 w-3.5 shrink-0" />
-          Strona {page.num} · odsyłacze pokazują opis źródła na miejscu, a kliknięcie otwiera
-          bibliografię w dossier
+          Strona {page.num} · odsyłacze pokazują opis źródła na miejscu, a kliknięcie otwiera bibliografię
+          w dossier
           <button
             type="button"
             onClick={() => onNavigate({ view: 'dossier', page: SOURCES_PAGE_ID })}
@@ -230,7 +231,6 @@ export function RecruitmentView({
           </button>
         </p>
       </div>
-
       {gate && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 backdrop-blur-sm"
@@ -256,7 +256,7 @@ export function RecruitmentView({
             </div>
             <form onSubmit={submitGate} className="space-y-3 px-5 py-4">
               <p className="text-[13px] leading-relaxed text-slate-600">
-                Ta część materiałów rekrutacyjnych jest dostępna po podaniu hasła.
+                Ta część materiałów jest dostępna po podaniu hasła.
               </p>
               <input
                 ref={gateInputRef}
@@ -270,7 +270,9 @@ export function RecruitmentView({
                 }`}
               />
               {gate.error && (
-                <p className="text-[12px] font-semibold text-rose-500">Nieprawidłowe hasło. Spróbuj ponownie.</p>
+                <p className="text-[12px] font-semibold text-rose-500">
+                  Nieprawidłowe hasło. Spróbuj ponownie.
+                </p>
               )}
               <button
                 type="submit"

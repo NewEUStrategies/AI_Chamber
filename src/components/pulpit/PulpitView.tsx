@@ -71,7 +71,8 @@ export function PulpitView({ onNavigate }: { onNavigate: (to: Route) => void }) 
         <p className="mt-1.5 max-w-3xl text-[13px] leading-[1.65] text-slate-600">
           Po lewej to, co wiadomo, po prawej to, co proponujemy. Rozwinięcie wiersza pokazuje, na czym
           opiera się ocena — a przy pozycjach nierozstrzygniętych także to, jak je zamknąć. Stamtąd
-          prowadzi dalej: do rekomendacji, a przy części pozycji do strony dossier dokumentującej odczyt.
+          prowadzi dalej: do rekomendacji, a przy części pozycji do strony ze śladem cyfrowym, na
+          której zapisano odczyt.
         </p>
         <div className="mt-4">
           <RegisterList onNavigate={onNavigate} status={status} onStatusChange={setStatus} />
