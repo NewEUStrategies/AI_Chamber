@@ -21,7 +21,12 @@ export type DossierComponent =
   | 'anchor-profile'
   | 'pl-positions'
   | 'ai-prompts'
-  | 'glossary-panel';
+  | 'glossary-panel'
+  | 'social-cockpit'
+  | 'post-ledger'
+  | 'format-impact'
+  | 'visual-system'
+  | 'social-glossary';
 
 export interface DossierTab {
   id: string;

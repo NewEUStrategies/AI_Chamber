@@ -1,4 +1,5 @@
 import { SEO_PAGES } from './pages-seo';
+import { SOCIAL_PAGES } from './pages-social';
 import { TRAFFIC_PAGES } from './pages-traffic';
 import type { DossierBlock, DossierPage } from './types';
 
@@ -147,7 +148,8 @@ const NEW_ENTRIES = `${ENTRY_34}
           <div class="i" id="zrodlo-40" data-src="40"><span class="n">40.</span><span class="t">Semrush, „Linki zwrotne: Przegląd”, aichamber.eu, domena główna, eksport z 16 września 2026 r. - Authority Score, domeny odsyłające, atrybuty i typy linków, rozkład Authority Score domen odsyłających, rozkład końcówek domen, kraje oraz anchory z datami pierwszego i ostatniego wystąpienia. <em>M2</em></span></div>
           <div class="i" id="zrodlo-41" data-src="41"><span class="n">41.</span><span class="t">Semrush, „Lista linków zwrotnych”, aichamber.eu, eksport stu pozycji z 16 września 2026 r. - adresy stron linkujących, anchory, atrybuty i Authority Score poszczególnych podstron. <em>M2</em></span></div>
           <div class="i" id="zrodlo-42" data-src="42"><span class="n">42.</span><span class="t">Semrush, „Pozycje organiczne”, aichamber.eu, baza danych Polska, odczyt panelu z 16 września 2026 r. - siedem fraz z pozycją, wolumeny, trudność i adresy docelowe. <em>M2</em></span></div>
-          <div class="i" id="zrodlo-43" data-src="43"><span class="n">43.</span><span class="t">Answer the Public, prompty AI dla aichamber.eu, język polski, Polska, eksport z 16 września 2026 r. - dwadzieścia pięć zapytań przypisanych do ChatGPT i Gemini wraz z klasyfikacją intencji. <em>M2</em></span></div>`;
+          <div class="i" id="zrodlo-43" data-src="43"><span class="n">43.</span><span class="t">Answer the Public, prompty AI dla aichamber.eu, język polski, Polska, eksport z 16 września 2026 r. - dwadzieścia pięć zapytań przypisanych do ChatGPT i Gemini wraz z klasyfikacją intencji. <em>M2</em></span></div>
+          <div class="i" id="zrodlo-44" data-src="44"><span class="n">44.</span><span class="t">Zrzuty ekranu profili AI Chamber CEE na LinkedIn (linkedin.com/company/ai-chamber-cee) i Facebooku (facebook.com/AIChamberCEE), odczyt z 16 września 2026 r., siedemdziesiąt plików w katalogu <b>research/screenshots</b> - treści postów, formaty, grafiki, liczby reakcji, komentarzy i udostępnień oraz liczba obserwujących. <em>M1</em></span></div>`;
 
 /* ------------------------------------------------------------------ */
 
@@ -314,7 +316,7 @@ export const DOSSIER_PATCHES: DossierPatch[] = [
     pageId: 'zrodla',
     find: 'Trzydzieści cztery pozycje w zapisie chicagowskim, ponumerowane na stałe i pogrupowane według rodzaju źródła.',
     replace:
-      'Czterdzieści trzy pozycje w zapisie chicagowskim, ponumerowanych na stałe i pogrupowanych według rodzaju źródła.',
+      'Czterdzieści cztery pozycje w zapisie chicagowskim, ponumerowane na stałe i pogrupowane według rodzaju źródła.',
     reason: 'Dopisane pozycje 35 i 36.',
   },
   {
@@ -389,5 +391,5 @@ export function applyOverlays(pages: DossierPage[]): DossierPage[] {
     return { ...patched, blocks };
   });
   // Hand-written pages that were never part of the source document.
-  return [...patched, ...TRAFFIC_PAGES, ...SEO_PAGES];
+  return [...patched, ...TRAFFIC_PAGES, ...SEO_PAGES, ...SOCIAL_PAGES];
 }

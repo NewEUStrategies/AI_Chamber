@@ -1,4 +1,4 @@
-import { GLOSSARY } from '@/content/dossier/seo';
+import { TERMS } from '@/content/dossier/glossary';
 
 /**
  * Abbreviation with an explanatory tooltip — the React counterpart of `g()`
@@ -6,7 +6,7 @@ import { GLOSSARY } from '@/content/dossier/seo';
  * hover and on keyboard focus.
  */
 export function Term({ k, children }: { k: string; children?: React.ReactNode }) {
-  const entry = GLOSSARY[k];
+  const entry = TERMS[k];
   if (!entry) return <>{children ?? k}</>;
   return (
     <span className="term" tabIndex={0} role="note" aria-label={`${entry.full} — wyjaśnienie`}>
