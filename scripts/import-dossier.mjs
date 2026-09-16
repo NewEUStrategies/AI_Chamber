@@ -246,7 +246,7 @@ const fileFor = (p) => {
 };
 function camel(id) { return 'page' + id.charAt(0).toUpperCase() + id.slice(1); }
 
-/* types.ts is hand-written — keep it while replacing the generated modules. */
+/* types.ts and overlays.ts are hand-written — keep them while replacing the rest. */
 for (const f of readdirSync(OUT).filter((f) => /^\d\d-.*\.ts$/.test(f) || f === 'index.ts')) {
   rmSync(`${OUT}/${f}`);
 }
@@ -259,15 +259,19 @@ for (const p of pages) {
 
 const index = [
   `import type { DossierPage } from './types';`,
+  `import { applyOverlays } from './overlays';`,
   ...pages.map((p) => {
     const meta = nav.find((n) => n.id === p.id);
     return `import { ${camel(p.id)} } from './${meta.num}-${p.id}';`;
   }),
   ``,
   `/** Pełna treść dossier — 15 stron, ${fnSeq} odsyłaczy, 34 pozycje bibliograficzne. */`,
-  `export const DOSSIER_PAGES: DossierPage[] = [`,
+  `const SOURCE_PAGES: DossierPage[] = [`,
   ...pages.map((p) => `  ${camel(p.id)},`),
   `];`,
+  ``,
+  `/** Generated pages plus the hand-written additions from ./overlays. */`,
+  `export const DOSSIER_PAGES: DossierPage[] = applyOverlays(SOURCE_PAGES);`,
   ``,
   `export const DOSSIER_GROUPS: { group: string; pages: DossierPage[] }[] = DOSSIER_PAGES.reduce(`,
   `  (acc, page) => {`,
@@ -280,6 +284,7 @@ const index = [
   `);`,
   ``,
   `export * from './types';`,
+  `export { DOSSIER_OVERLAYS } from './overlays';`,
   ``,
 ].join('\n');
 writeFileSync(`${OUT}/index.ts`, index);

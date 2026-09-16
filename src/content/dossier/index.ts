@@ -1,4 +1,5 @@
 import type { DossierPage } from './types';
+import { applyOverlays } from './overlays';
 import { pagePrzeglad } from './01-przeglad';
 import { pageStruktura } from './02-struktura';
 import { pageOrganizacja } from './03-organizacja';
@@ -16,7 +17,7 @@ import { pagePlan } from './14-plan';
 import { pagePitch } from './15-pitch';
 
 /** Pełna treść dossier — 15 stron, 357 odsyłaczy, 34 pozycje bibliograficzne. */
-export const DOSSIER_PAGES: DossierPage[] = [
+const SOURCE_PAGES: DossierPage[] = [
   pagePrzeglad,
   pageStruktura,
   pageOrganizacja,
@@ -34,6 +35,9 @@ export const DOSSIER_PAGES: DossierPage[] = [
   pagePitch,
 ];
 
+/** Generated pages plus the hand-written additions from ./overlays. */
+export const DOSSIER_PAGES: DossierPage[] = applyOverlays(SOURCE_PAGES);
+
 export const DOSSIER_GROUPS: { group: string; pages: DossierPage[] }[] = DOSSIER_PAGES.reduce(
   (acc, page) => {
     const last = acc[acc.length - 1];
@@ -45,3 +49,4 @@ export const DOSSIER_GROUPS: { group: string; pages: DossierPage[] }[] = DOSSIER
 );
 
 export * from './types';
+export { DOSSIER_OVERLAYS } from './overlays';
