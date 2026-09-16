@@ -14,7 +14,7 @@ import type { MarketingSegment } from '@/lib/route';
 
 const SEGMENTS_NAV: { id: string; label: string; render: () => ReactNode }[] = [
   { id: 'lejek', label: 'Lejek', render: () => <FunnelSegment /> },
-  { id: 'kim', label: 'Kim są i komu sprzedają', render: () => <IcpMap segments={SEGMENTS} roles={ROLES} /> },
+  { id: 'kim', label: 'O AIChamber i odbiorcach', render: () => <IcpMap segments={SEGMENTS} roles={ROLES} /> },
   { id: 'kanaly', label: 'Kanały', render: () => <ChannelMatrix rows={CHANNELS} /> },
   { id: 'aktywa', label: 'Aktywa i luki', render: () => <AssetsSegment /> },
   { id: 'roadmapa', label: 'Roadmapa', render: () => <RoadmapBoard horizons={ROADMAP} /> },
@@ -41,7 +41,7 @@ export function MarketingView({ segment }: { segment?: MarketingSegment } = {}) 
           Kokpit marketingu · AI Chamber CEE
         </p>
         <h1 className="mt-2 max-w-3xl font-display text-[30px] font-extrabold leading-[1.12] text-chamber-navy sm:text-[38px]">
-          Realny kapitał polityczny i lejek, którego nikt nie zbudował
+          Streszczenie analityczne
         </h1>
         <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
           Diagnoza marketingu izby oparta na pomiarach ze strony „Ślad cyfrowy”: ruchu obu domen,

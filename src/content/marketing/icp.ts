@@ -28,7 +28,7 @@ export const SEGMENTS: IcpSegment[] = [
     size: 'wąska, ale zamożna',
     fit: 4,
     status: 'kuleje',
-    why: 'AI Act to dla nich koszt i ryzyko, a izba siedzi przy stole, przy którym te przepisy powstają. Najmocniejszy argument sprzedażowy, jaki mają — i najsłabiej wykorzystany komercyjnie.',
+    why: 'AI Act to dla nich koszt i ryzyko, a izba zasiada przy stole, przy którym te przepisy powstają. Najmocniejszy argument sprzedażowy, jaki mają — i najsłabiej wykorzystany komercyjnie.',
     evidence: 'Powołanie do European AI Act Advisory Forum przy Komisji Europejskiej; konsultacje systemów wysokiego ryzyka; listy otwarte ws. Digital Omnibus.',
   },
   {
