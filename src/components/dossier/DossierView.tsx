@@ -136,7 +136,7 @@ export function DossierView() {
               <br />
               Źródło własne: aichamber.eu
               <br />
-              Cennik składek: niejawny
+              Składki: 150-1500 EUR/rok
             </div>
           </div>
         </div>
