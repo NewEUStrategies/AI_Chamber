@@ -91,16 +91,6 @@ export function DossierView() {
       <aside className="lg:w-[272px] lg:shrink-0">
         <div className="lg:sticky lg:top-24">
           <div className="card overflow-hidden">
-            <div className="border-b border-slate-100 bg-gradient-to-br from-chamber-navy to-chamber-navy-dark px-5 py-4">
-              <p className="text-[9.5px] font-bold uppercase tracking-[0.2em] text-chamber-green">
-                Dossier rozpoznawcze
-              </p>
-              <p className="mt-2 font-display text-xl font-extrabold leading-none text-white">AI Chamber</p>
-              <p className="mt-1.5 text-[11px] leading-snug text-white/70">
-                Izba gospodarcza · region CEE · odczyt 08.2026
-              </p>
-            </div>
-
             <nav
               aria-label="Strony dossier"
               className="flex gap-1 overflow-x-auto p-2 lg:block lg:max-h-none lg:overflow-x-visible"
