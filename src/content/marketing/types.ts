@@ -1,69 +1,57 @@
-import type { StatusKey } from '@/components/marketing/palette';
+/** Wspólne typy widoku marketingowego (dossier rozpoznawcze AI Chamber CEE). */
 
-/** Who the buying decision runs through. */
-export interface BuyingRole {
-  role: string;
-  /** What this person actually wants out of membership. */
-  wants: string;
-  /** What stops them saying yes. */
-  blocks: string;
-  weight: 'decyduje' | 'wpływa' | 'płaci' | 'używa';
-  /** Where AI Chamber currently reaches them, or null when it does not. */
-  reachedVia: string | null;
-}
+export type ChannelStatus = 'prowadzony' | 'pilotaz' | 'planowany' | 'do-odradzenia';
+
+export type RoadmapTrack = 'zasieg' | 'popyt' | 'wiarygodnosc' | 'produkt';
 
 export interface IcpSegment {
-  name: string;
-  size: string;
-  why: string;
-  evidence: string;
-  fit: number;
-  status: StatusKey;
+  key: string;
+  label: string;
+  /** Udział w populacji firm, do których mierzy izba (szacunek). */
+  share: number;
+  /** Dopasowanie obecnej oferty do potrzeb segmentu, 0–100. */
+  readiness: number;
+  headcount: string;
+  countries: string[];
+  drivers: string[];
+  objections: string[];
+}
+
+export interface FunnelStage {
+  key: string;
+  label: string;
+  value: number;
+  unit: string;
+  /** Odsetek przechodzący do etapu następnego, 0–1. */
+  conv: number;
+  note: string;
 }
 
 export interface ChannelRow {
-  channel: string;
-  /** 1–5, how much the organisation currently invests. */
-  effort: number;
-  /** 1–5, measured or best-evidenced return. */
-  impact: number;
-  status: StatusKey;
-  evidence: string;
-  verdict: string;
-  funnel: 'TOFU' | 'MOFU' | 'BOFU' | 'retencja';
-}
-
-export interface AssetRow {
-  name: string;
-  kind: string;
-  exists: 'tak' | 'nie' | 'nieznane';
-  gated: 'tak' | 'nie' | 'nieznane';
-  funnel: 'TOFU' | 'MOFU' | 'BOFU' | 'retencja';
+  key: string;
+  label: string;
+  role: string;
+  status: ChannelStatus;
+  /** Wkład w koszt godziny zespołu: 1 niski, 2 średni, 3 wysoki. */
+  effort: 1 | 2 | 3;
+  /** Wpływ na wynik rekrutacyjny: 1 marginalny, 2 zauważalny, 3 istotny. */
+  impact: 1 | 2 | 3;
   note: string;
 }
 
 export interface RoadmapItem {
+  key: string;
+  quarter: string;
   title: string;
-  why: string;
-  how: string;
-  owner: string;
-  effort: 'niski' | 'średni' | 'wysoki';
-  impact: number;
-  metric: string;
-  funnel: 'TOFU' | 'MOFU' | 'BOFU' | 'retencja' | 'pomiar';
-  cost: string;
+  track: RoadmapTrack;
+  done?: boolean;
+  detail: string;
 }
 
-export interface Horizon {
+export interface MarketingAsset {
   key: string;
   label: string;
-  frame: string;
-  items: RoadmapItem[];
-}
-
-export interface Gap {
-  what: string;
-  blocks: string;
-  howToGet: string;
-  effort: 'niski' | 'średni' | 'wysoki';
+  kind: string;
+  cadence: string;
+  note: string;
 }

@@ -1,9 +1,10 @@
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
-import { BookText, LayoutDashboard, TriangleAlert, LoaderCircle } from 'lucide-react';
+import { BookText, LayoutDashboard, Megaphone, TriangleAlert, LoaderCircle } from 'lucide-react';
 import type { ApplicationStatus, MembershipApplication } from '@/lib/types';
 import { fetchApplications, updateApplication, deleteApplication } from '@/lib/applications';
 import { ChamberLogo } from '@/components/ChamberLogo';
 import { DashboardView } from '@/components/DashboardView';
+import { MarketingView } from '@/components/marketing/MarketingView';
 import { ApplicationDrawer } from '@/components/ApplicationDrawer';
 
 // The dossier ships ~320 kB of prose; keep it out of the initial bundle.
@@ -11,7 +12,7 @@ const DossierView = lazy(() =>
   import('@/components/dossier/DossierView').then((m) => ({ default: m.DossierView }))
 );
 
-type View = 'dashboard' | 'dossier';
+type View = 'dashboard' | 'marketing' | 'dossier';
 
 export default function App() {
   const [view, setView] = useState<View>('dashboard');
@@ -76,6 +77,7 @@ export default function App() {
 
   const nav: { key: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'dashboard', label: 'Pulpit', icon: LayoutDashboard },
+    { key: 'marketing', label: 'Marketing', icon: Megaphone },
     { key: 'dossier', label: 'Dossier', icon: BookText },
   ];
 
@@ -123,6 +125,8 @@ export default function App() {
           <Suspense fallback={<ViewLoader label="Ładowanie dossier…" />}>
             <DossierView />
           </Suspense>
+        ) : view === 'marketing' ? (
+          <MarketingView />
         ) : loading ? (
           <ViewLoader label="Ładowanie danych rekrutacji…" />
         ) : apps.length === 0 && !error ? (

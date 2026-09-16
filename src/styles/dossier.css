@@ -514,6 +514,7 @@
   line-height: 1.5;
   letter-spacing: normal;
   text-transform: none;
+  overflow-wrap: anywhere;
 }
 .chart-tip .t {
   display: block;
@@ -522,6 +523,7 @@
   font-weight: 800;
   color: #293277;
   margin-bottom: 2px;
+  white-space: normal;
 }
 .chart-tip .d {
   display: block;
@@ -536,13 +538,15 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  white-space: nowrap;
+  white-space: normal;
+  min-width: 0;
 }
 .chart-tip .r b {
   margin-left: auto;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   color: #293277;
+  white-space: nowrap;
 }
 .chart-tip .dot {
   width: 8px;

@@ -1,93 +1,79 @@
-import type { BuyingRole, IcpSegment } from './types';
+import type { IcpSegment } from './types';
 
 /**
- * Who AI Chamber should be selling membership to, and who inside those
- * companies actually decides. Segments are ranked by fit, not by size — the
- * biggest pool is not automatically the best one to chase with a two-person
- * commercial function.
+ * Segmenty ICP odczytane z dossier rozpoznawczego (zakładka „Fit").
+ * Udziały to szacunki na bazie profilu członków i kandydatów,
+ * nie pomiar — przy tak małej liczbie firm liczy się kolejność,
+ * nie wartość.
  */
-export const SEGMENTS: IcpSegment[] = [
+export const ICP_SEGMENTS: IcpSegment[] = [
   {
-    name: 'Polskie MŚP wdrażające AI',
-    size: 'największa pula w regionie',
-    fit: 5,
-    status: 'kuleje',
-    why: 'Izba ma o nich własne badanie i zna ich problem lepiej niż ktokolwiek w regionie. Trzy czwarte deklaruje używanie AI, ale tylko jedna czwarta na skalę — to dokładnie luka, którą izba obiecuje zasypać.',
-    evidence: 'Raport „How do SMEs in CEE find their way in the world of AI?" — 3 200 respondentów z jedenastu krajów.',
+    key: 'scaleup',
+    label: 'AI scale-up z CEE',
+    share: 38,
+    readiness: 74,
+    headcount: '50–250',
+    countries: ['PL', 'CZ', 'RO', 'HU'],
+    drivers: [
+      'Kredyty handlowe wobec funduszy i korporacji',
+      'Wejście do programów unijnych (AI Act, DIGITAL)',
+      'Rekrutacja talentów w regionie',
+    ],
+    objections: [
+      'Czynsz członkowski przy spalaniu gotówki',
+      'Izba kojarzona z lobbingiem dużych podmiotów',
+    ],
   },
   {
-    name: 'Dostawcy rozwiązań AI',
-    size: 'trzon obecnej bazy',
-    fit: 5,
-    status: 'dziala',
-    why: 'Kupują widoczność i dostęp do klientów, nie wiedzę. Są najłatwiejsi do pozyskania, bo korzyść jest natychmiastowa, i najłatwiejsi do stracenia, gdy przestaje spływać.',
-    evidence: 'Lista członków obejmuje ElevenLabs i ICEYE; karty eksperckie promują członków-dostawców w Rzeczpospolitej i wirtualnemedia.',
+    key: 'korporacja',
+    label: 'Korporacja z zapleczem AI',
+    share: 27,
+    readiness: 61,
+    headcount: '1000+',
+    countries: ['PL', 'DE', 'AT'],
+    drivers: [
+      'Wpływ na kształt regulacji AI Act na wczesnym etapie',
+      'Networking z decydentami Bruksela–Warszawa',
+      'Widoczność ESG/technologiczna w regionie',
+    ],
+    objections: [
+      'Decyzja zapada w centrali poza regionem',
+      'Własne lobby branżowe już istnieje',
+    ],
   },
   {
-    name: 'Firmy w branżach regulowanych',
-    size: 'wąska, ale zamożna',
-    fit: 4,
-    status: 'kuleje',
-    why: 'AI Act to dla nich koszt i ryzyko, a izba siedzi przy stole, przy którym te przepisy powstają. Najmocniejszy argument sprzedażowy, jaki mają — i najsłabiej wykorzystany komercyjnie.',
-    evidence: 'Powołanie do European AI Act Advisory Forum przy Komisji Europejskiej; konsultacje systemów wysokiego ryzyka; listy otwarte ws. Digital Omnibus.',
+    key: 'dostawca',
+    label: 'Dostawcy infrastruktury i chmur',
+    share: 20,
+    readiness: 48,
+    headcount: '250+',
+    countries: ['PL', 'LT', 'SK'],
+    drivers: [
+      'Dotarcie do buyerów AI ze środka izby',
+      'Współtworzenie standardów interoperacyjności',
+    ],
+    objections: [
+      'Izba zrzesza ich klientów, nie ich — ryzyko kanibalizacji',
+      'Wolą własne summity (CEE AI Summit jako konkurent)',
+    ],
   },
   {
-    name: 'Startupy AI szukające finansowania',
-    size: 'liczna, ale uboga',
-    fit: 3,
-    status: 'kuleje',
-    why: 'Chętnie przyjdą na webinar o finansowaniu, rzadziej zapłacą składkę. Dobre paliwo do budowania zasięgu i listy, słabe do przychodu — chyba że pakiet startowy jest realnie tani.',
-    evidence: 'Seria Funding & Growth (webinar „Beyond Venture Capital", 7 lipca; „Not Just Horizon Europe", 16 września).',
-  },
-  {
-    name: 'Instytucje publiczne i samorządy',
-    size: 'nieliczna',
-    fit: 2,
-    status: 'nieznane',
-    why: 'Politycznie cenni jako partnerzy i sygnatariusze, ale rzadko płacą składkę członkowską. Traktować jako kapitał relacyjny, nie jako segment przychodowy.',
-    evidence: 'Deklaracja Praska podpisana przez dziewięć państw; współpraca z czeskim ministerstwem przemysłu i CNAIP.',
+    key: 'instytucja',
+    label: 'Kancelarie, think-tanki, media branżowe',
+    share: 15,
+    readiness: 39,
+    headcount: '10–100',
+    countries: ['PL', 'BE', 'EE'],
+    drivers: [
+      'Dostęp do wiedzy członków jako materiału analitycznego',
+      'Współprodukcja treści (raporty, webinary)',
+    ],
+    objections: [
+      'Brak budżetu członkowskiego w modelu non-profit',
+      'Dla nich izba jest źródłem, nie klientem',
+    ],
   },
 ];
 
-/**
- * A chamber sells to a committee, not to a person. `reachedVia: null` marks a
- * role no current channel speaks to — those are the holes that make deals stall
- * late, after the enthusiast inside the company has already said yes.
- */
-export const ROLES: BuyingRole[] = [
-  {
-    role: 'Założyciel lub prezes MŚP',
-    weight: 'decyduje',
-    wants: 'Dostęp do klientów i wiarygodność, która skraca cykl sprzedaży jego własnej firmy.',
-    blocks: 'Nie widzi, co konkretnie dostanie za 1 500 EUR — lista logotypów to nie jest odpowiedź.',
-    reachedVia: 'LinkedIn, wydarzenia networkingowe, karty eksperckie w mediach',
-  },
-  {
-    role: 'Dyrektor ds. technologii lub AI',
-    weight: 'wpływa',
-    wants: 'Wiedzę, czego wymaga regulator, i benchmark, gdzie jest na tle rynku.',
-    blocks: 'Treści izby są ogólne — brakuje materiału, który wnosi coś do jego pracy w poniedziałek rano.',
-    reachedVia: 'Webinary, raporty, newsletter',
-  },
-  {
-    role: 'Dział prawny i compliance',
-    weight: 'wpływa',
-    wants: 'Pewność, jak czytać AI Act, i wcześniejsze ostrzeżenie o zmianach.',
-    blocks: 'Nie wie, że izba istnieje — komunikacja o rzecznictwie idzie do decydentów w Brukseli, nie do prawników w firmach.',
-    reachedVia: null,
-  },
-  {
-    role: 'Dyrektor finansowy',
-    weight: 'płaci',
-    wants: 'Uzasadnienie wydatku w kategoriach zwrotu, nie przynależności.',
-    blocks: 'Brak jakiegokolwiek materiału przeliczającego składkę na korzyść — żadnego case study, żadnej liczby.',
-    reachedVia: null,
-  },
-  {
-    role: 'Marketing i komunikacja',
-    weight: 'używa',
-    wants: 'Powodów do dumy i materiału do własnych kanałów: wystąpień, cytatów, obecności w mediach.',
-    blocks: 'Nikt im nie mówi wprost, że karta ekspercka w Rzeczpospolitej jest częścią członkostwa.',
-    reachedVia: 'Karty eksperckie, zaproszenia na panele',
-  },
-];
+export const ICP_NOTE =
+  'Punktem wyjścia jest profil firm już przyjętych i kandydatów w lejku rekrutacji; segmenty bez własnego popytu (instytucje) trafiają do ról partnerskich, nie sprzedażowych.';
