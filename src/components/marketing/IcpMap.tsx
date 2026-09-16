@@ -128,7 +128,7 @@ function BuyingCentre({ roles }: { roles: BuyingRole[] }) {
     <Card
       kicker="Centrum zakupowe"
       title="Kto decyduje i czy go dziś dosięgamy"
-      lead="Cztery role przechodzą przez każdą decyzję o członkostwie. Rola bez kanału kontaktu to nie luka w tabeli — to decyzja podejmowana bez nas."
+      lead={`${roles.length === 5 ? 'Pięć ról przechodzi' : `${roles.length} ról przechodzi`} przez każdą decyzję o członkostwie. Rola bez kanału kontaktu to nie luka w tabeli — to decyzja podejmowana bez nas.`}
       note="Kolor znacznika oznacza rolę w decyzji; zasięg zawsze niesie etykietę tekstową, nigdy sam kolor."
     >
       <Legend items={parts.map((p) => ({ label: p.label, color: p.color }))} />

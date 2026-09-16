@@ -92,15 +92,23 @@ export function FunnelDiagram({ stages }: { stages: FunnelStage[] }) {
                   <span className="w-[54px] shrink-0 text-right font-mono text-[11px] font-extrabold" style={{ color: fill }}>
                     {s.short}
                   </span>
-                  {/* Bands are separated by the surface gap, never by a stroke. */}
-                  <span className="relative h-7 flex-1 overflow-hidden rounded-[4px]" style={{ background: INK.track }}>
+                  {/*
+                   * The name sits above the bar in ink rather than inside the
+                   * fill: a narrow band (retention is 22%) would otherwise
+                   * render most of a white label over the near-white track.
+                   * Text never wears the data colour — the bar carries it.
+                   */}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[12.5px] font-bold text-chamber-navy">{s.name}</span>
                     <span
-                      aria-hidden
-                      className="absolute inset-y-0 left-0 flex items-center transition-[width] duration-700 ease-out"
-                      style={{ width: `${s.width}%`, background: fill, borderRadius: `0 ${MARK.barRadius}px ${MARK.barRadius}px 0` }}
-                    />
-                    <span className="relative z-10 flex h-full items-center px-3 text-[12px] font-bold text-white mix-blend-normal">
-                      {s.name}
+                      className="mt-1 block h-2.5 overflow-hidden rounded-[4px]"
+                      style={{ background: INK.track }}
+                    >
+                      <span
+                        aria-hidden
+                        className="block h-full transition-[width] duration-700 ease-out"
+                        style={{ width: `${s.width}%`, background: fill, borderRadius: `0 ${MARK.barRadius}px ${MARK.barRadius}px 0` }}
+                      />
                     </span>
                   </span>
                   <span
