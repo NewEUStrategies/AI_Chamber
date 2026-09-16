@@ -5,9 +5,10 @@ import { EVENT, RECORDING, dayOffset, tLabel } from '@/content/conference/event'
 import { ROLES, SPEED_RULE } from '@/content/conference/production';
 import type { ArtifactKey } from '@/content/conference/types';
 import { CascadeNav } from './CascadeNav';
+import { PlanView } from './plan/PlanView';
 import { ProductionTimeline } from './ProductionTimeline';
 import { ArtifactSpec } from './primitives';
-import { MEDIUM_COLOR } from './tokens';
+import { MEDIUM_COLOR, PLAN_ACCENT } from './tokens';
 import { NewsletterTab } from './tabs/NewsletterTab';
 import { MediaQuoteTab } from './tabs/MediaQuoteTab';
 import { PhotosTab } from './tabs/PhotosTab';
@@ -41,7 +42,19 @@ const PANELS: Record<ArtifactKey, () => ReactNode> = {
  * filled with an invented sentence from a named person, it stays a slot: the
  * constraint is designed in advance, the words are taken off the recording.
  */
+/**
+ * Two halves of the same subject, switched rather than stacked.
+ *
+ * „Materiał z konferencji” is what comes out of one day of recordings.
+ * „Proponowane działania” is what to do about the four channels that material
+ * has to travel through. They are on one page because the conference is where
+ * all four converge, and they are behind a switch because nobody reads both in
+ * one sitting.
+ */
+type Mode = 'material' | 'plan';
+
 export function ConferenceView() {
+  const [mode, setMode] = useState<Mode>('material');
   const [active, setActive] = useState<ArtifactKey>('nagranie');
   const today = useMemo(() => dayOffset(), []);
   const artifact = artifactByKey(active);
@@ -49,23 +62,71 @@ export function ConferenceView() {
 
   return (
     <div className="animate-fade-up">
-      <header className="mb-7">
+      <header className="mb-6">
         <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-chamber-green-deep">
           Konferencje · {EVENT.name} · {EVENT.city}, {EVENT.dateLabel}
         </p>
-        <h1 className="mt-2 max-w-3xl font-display text-[30px] font-extrabold leading-[1.12] text-chamber-navy sm:text-[38px]">
-          Jeden dzień nagrań, siedem rodzin materiału
-        </h1>
-        <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
-          Konferencja jest jedynym wydarzeniem generującym roczny ruch obu domen — i miejscem, w którym
-          dziś ginie najwięcej wartości, bo materiał powstaje raz i wychodzi raz. Ta strona rozkłada jedno
-          nagranie na siedem rodzin publikacji, każdą z własnym terminem, właścicielem i progiem
-          publikacji. Tam, gdzie z zewnątrz nie da się ustalić stanu edycji 2026, napisane jest{' '}
-          <b>nieznane</b>. Tam, gdzie treścią miałoby być zdanie, którego nikt jeszcze nie powiedział,
-          zostaje <b>slot</b> — z gotowym ograniczeniem formatu, bez zmyślonego cytatu.
-        </p>
+
+        <div
+          role="tablist"
+          aria-label="Część strony"
+          className="mt-3 inline-flex flex-wrap gap-1.5 rounded-full border border-slate-200 bg-slate-50 p-1"
+        >
+          {([
+            { key: 'material', label: 'Materiał z konferencji', fill: '#293277' },
+            { key: 'plan', label: 'Proponowane działania', fill: PLAN_ACCENT },
+          ] as const).map((m) => {
+            const on = mode === m.key;
+            return (
+              <button
+                key={m.key}
+                role="tab"
+                aria-selected={on}
+                onClick={() => setMode(m.key)}
+                className={`rounded-full px-4 py-1.5 text-[13px] font-bold transition-colors ${
+                  on ? 'text-white shadow-md' : 'text-chamber-navy hover:bg-white'
+                }`}
+                style={on ? { background: m.fill, boxShadow: `0 4px 12px ${m.fill}33` } : undefined}
+              >
+                {m.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {mode === 'material' ? (
+          <>
+            <h1 className="mt-4 max-w-3xl font-display text-[30px] font-extrabold leading-[1.12] text-chamber-navy sm:text-[38px]">
+              Jeden dzień nagrań, siedem rodzin materiału
+            </h1>
+            <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
+              Konferencja jest jedynym wydarzeniem generującym roczny ruch obu domen — i miejscem, w którym
+              dziś ginie najwięcej wartości, bo materiał powstaje raz i wychodzi raz. Ta część rozkłada jedno
+              nagranie na siedem rodzin publikacji, każdą z własnym terminem, właścicielem i progiem
+              publikacji. Tam, gdzie z zewnątrz nie da się ustalić stanu edycji 2026, napisane jest{' '}
+              <b>nieznane</b>. Tam, gdzie treścią miałoby być zdanie, którego nikt jeszcze nie powiedział,
+              zostaje <b>slot</b> — z gotowym ograniczeniem formatu, bez zmyślonego cytatu.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="mt-4 max-w-3xl font-display text-[30px] font-extrabold leading-[1.12] text-chamber-navy sm:text-[38px]">
+              Proponowane działania
+            </h1>
+            <p className="mt-3 max-w-3xl text-[14px] leading-[1.7] text-slate-600">
+              Cztery kanały, przez które przechodzi materiał z sekcji obok, i rekomendacje dla każdego z nich.
+              Liczby nie są tu przepisywane: wszystko, co policzalne, dolicza się z danych rozpoznania, więc
+              poprawka w danych poprawia rekomendację. Tym, co należy do tej sekcji, jest{' '}
+              <b>ocena</b> — i jest napisana tak, żeby dało się ją podważyć.
+            </p>
+          </>
+        )}
       </header>
 
+      {mode === 'plan' ? (
+        <PlanView />
+      ) : (
+      <>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
           label="Jednostek publikacyjnych z jednego dnia"
@@ -163,6 +224,8 @@ export function ConferenceView() {
           </div>
         </div>
       </section>
+      </>
+      )}
     </div>
   );
 }
