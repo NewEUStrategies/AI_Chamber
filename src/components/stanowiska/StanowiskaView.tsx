@@ -162,21 +162,11 @@ export function StanowiskaView({ tab }: { tab?: StanowiskaTab } = {}) {
  * ---------------------------------------------------------------- */
 
 function Overview({ onPick }: { onPick: (k: (typeof ROLES)[number]['key']) => void }) {
-  const total = ROLES.reduce((a, r) => a + r.pay.izba[0], 0);
-  const totalTop = ROLES.reduce((a, r) => a + r.pay.izba[1], 0);
-
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
         <StatTile label="Ról w siatce" value={String(ROLES.length)} sub="od zarządczej po operacyjną" accent={CAT[1]} />
-        <StatTile
-          label="Miesięczny koszt płac przy pełnej obsadzie"
-          value={`${plInt(total / 1000)}–${plInt(totalTop / 1000)} tys.`}
-          sub="brutto, Warszawa, pięć etatów"
-          accent={CAT[1]}
-        />
         <StatTile label="Pierwszy etat" value="Manager" sub="nie dyrektor i nie specjalista" />
-        <StatTile label="Dyrektor ma sens od" value="5 etatów" sub="wcześniej podnosi koszt bez dodania wartości" />
       </div>
 
       <section className="rounded-[14px] border border-slate-200 bg-white p-5 shadow-card sm:p-6">
