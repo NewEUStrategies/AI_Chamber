@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { CHAMBER, MONTHS_PL, SUMMIT } from '@/content/dossier/analytics';
 import { INK, SERIES, plFormat } from './trafficPalette';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 const W = 720;
 const H = 300;
@@ -25,6 +27,7 @@ const y = (v: number) => PAD.top + PLOT_H - (v / MAX) * PLOT_H;
  */
 export function TrafficTimeline() {
   const [active, setActive] = useState<number | null>(null);
+  const tip = useChartTip();
 
   const paths = useMemo(
     () => SERIES_DEF.map((s) => ({ ...s, d: s.data.map((v, i) => `${i ? 'L' : 'M'}${x(i)},${y(v)}`).join(' ') })),
@@ -124,10 +127,20 @@ export function TrafficTimeline() {
             width={PLOT_W / 5}
             height={PLOT_H}
             fill="transparent"
-            onMouseEnter={() => setActive(i)}
+            onMouseEnter={(e) => {
+              setActive(i);
+              tip.show(
+                e,
+                SERIES_DEF.map((s) => ({ label: s.label, value: plFormat(s.data[i]), color: s.color })),
+                `${MONTHS_PL[i]} 2026`
+              );
+            }}
+            onMouseLeave={tip.hide}
           />
         ))}
       </svg>
+
+      <ChartTip tip={tip.tip} />
 
       <div className="mt-3 min-h-[46px] rounded-[7px] border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs">
         {active === null ? (

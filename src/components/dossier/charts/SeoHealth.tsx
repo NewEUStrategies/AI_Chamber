@@ -1,7 +1,10 @@
 import { DOMAIN_HEALTH } from '@/content/dossier/seo';
 import { plNum } from '@/content/dossier/analytics';
 import { Term } from '@/components/dossier/Term';
+import { useState } from 'react';
 import { INK, SERIES } from './trafficPalette';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 const W = 720;
 const H = 180;
@@ -19,6 +22,18 @@ export function SeoHealth() {
   const d = DOMAIN_HEALTH.asTrend.map((v, i) => `${i ? 'L' : 'M'}${x(i)},${y(v)}`).join(' ');
   const peak = Math.max(...DOMAIN_HEALTH.asTrend);
   const peakIndex = DOMAIN_HEALTH.asTrend.indexOf(peak);
+  const [active, setActive] = useState<number | null>(null);
+  const tip = useChartTip();
+  const columnW = PLOT_W / (DOMAIN_HEALTH.asTrend.length - 1);
+
+  const activate = (i: number) => (e: { clientX: number; clientY: number }) => {
+    setActive(i);
+    tip.show(e, [{ label: 'Authority Score', value: `${DOMAIN_HEALTH.asTrend[i]} pkt` }], DOMAIN_HEALTH.asTrendLabels[i]);
+  };
+  const deactivate = () => {
+    setActive(null);
+    tip.hide();
+  };
 
   return (
     <div className="space-y-5">
@@ -69,17 +84,71 @@ export function SeoHealth() {
               </text>
             </g>
           ))}
+          {active !== null && (
+            <line
+              x1={x(active)}
+              y1={PAD.top}
+              x2={x(active)}
+              y2={PAD.top + PLOT_H}
+              stroke={INK.dim}
+              strokeWidth="1"
+              strokeDasharray="3 3"
+            />
+          )}
           <path d={d} fill="none" stroke={SERIES.chamber} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
           {DOMAIN_HEALTH.asTrend.map((v, i) => (
-            <circle key={i} cx={x(i)} cy={y(v)} r={i === peakIndex ? 5 : 3.5} fill={SERIES.chamber} stroke="#fff" strokeWidth="2" />
+            <circle
+              key={i}
+              cx={x(i)}
+              cy={y(v)}
+              r={active === i ? 5.5 : i === peakIndex ? 5 : 3.5}
+              fill={SERIES.chamber}
+              stroke="#fff"
+              strokeWidth="2"
+              className="pointer-events-none transition-all duration-150"
+            />
           ))}
+          {active !== null && (
+            <text
+              x={x(active)}
+              y={y(DOMAIN_HEALTH.asTrend[active]) - 12}
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="800"
+              fill={INK.strong}
+            >
+              {DOMAIN_HEALTH.asTrend[active]}
+            </text>
+          )}
           {DOMAIN_HEALTH.asTrendLabels.map((m, i) =>
             i % 2 === 0 ? (
-              <text key={m} x={x(i)} y={H - 10} textAnchor="middle" fontSize="10" fontWeight="600" fill={INK.muted}>
+              <text
+                key={m}
+                x={x(i)}
+                y={H - 10}
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight={active === i ? '800' : '600'}
+                fill={active === i ? INK.strong : INK.muted}
+                className="pointer-events-none"
+              >
                 {m}
               </text>
             ) : null
           )}
+          {DOMAIN_HEALTH.asTrend.map((_, i) => (
+            <rect
+              key={`hit-${i}`}
+              x={x(i) - columnW / 2}
+              y={PAD.top}
+              width={columnW}
+              height={PLOT_H}
+              fill="transparent"
+              onMouseEnter={activate(i)}
+              onMouseMove={activate(i)}
+              onMouseLeave={deactivate}
+            />
+          ))}
           <text x={x(peakIndex)} y={y(peak) - 12} textAnchor="middle" fontSize="11" fontWeight="800" fill={INK.strong}>
             {peak}
           </text>
@@ -89,6 +158,7 @@ export function SeoHealth() {
           poziom typowy dla młodej domeny bez zbudowanego zaplecza linkowego — nie dla organizacji
           branżowej z dwuletnim stażem i dorobkiem publikacyjnym.
         </p>
+        <ChartTip tip={tip.tip} />
       </div>
     </div>
   );

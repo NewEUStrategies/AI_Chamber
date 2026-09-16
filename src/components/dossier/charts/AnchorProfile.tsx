@@ -1,7 +1,14 @@
-import { ANCHORS, DOMAIN_HEALTH, SEO_DERIVED, TOP_BACKLINKS } from '@/content/dossier/seo';
+import {
+  ANCHORS,
+  DOMAIN_HEALTH,
+  SEO_DERIVED,
+  TOP_BACKLINKS,
+} from '@/content/dossier/seo';
 import { plNum } from '@/content/dossier/analytics';
 import { Term } from '@/components/dossier/Term';
 import { SERIES, plPct } from './trafficPalette';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 const KIND_LABEL: Record<string, { label: string; cls: string }> = {
   spam: { label: 'reklama sprzedawcy linków', cls: 'pill warn' },
@@ -12,6 +19,7 @@ const KIND_LABEL: Record<string, { label: string; cls: string }> = {
 
 /** What the anchor texts pointing at the domain actually say. */
 export function AnchorProfile() {
+  const tip = useChartTip();
   const other = DOMAIN_HEALTH.backlinks - SEO_DERIVED.spamBacklinks - SEO_DERIVED.brandBacklinks;
   const segments = [
     { label: 'reklamy sprzedawców linków', value: SEO_DERIVED.spamBacklinks, color: '#b45309' },
@@ -36,10 +44,24 @@ export function AnchorProfile() {
               key={s.label}
               className="h-full first:rounded-l-full last:rounded-r-full"
               style={{ width: `${(s.value / DOMAIN_HEALTH.backlinks) * 100}%`, background: s.color }}
-              title={`${s.label}: ${plNum(s.value)}`}
+              onMouseEnter={(e) =>
+                tip.show(
+                  e,
+                  [
+                    { label: 'linki', value: plNum(s.value) },
+                    {
+                      label: 'udział',
+                      value: plPct(Number(((s.value / DOMAIN_HEALTH.backlinks) * 100).toFixed(1))),
+                    },
+                  ],
+                  s.label
+                )
+              }
+              onMouseLeave={tip.hide}
             />
           ))}
         </div>
+        <ChartTip tip={tip.tip} />
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
           {segments.map((s) => (
             <span key={s.label} className="inline-flex items-center gap-2 text-xs text-slate-600">

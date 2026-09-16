@@ -493,6 +493,57 @@
   border-left: 3px solid #293277;
   border-radius: 0 var(--d-radius) var(--d-radius) 0;
 }
+/* chart hover tooltip — viewport-anchored, never clipped by scroll containers */
+.dossier .chart-tip {
+  position: fixed;
+  z-index: 3300;
+  pointer-events: none;
+  display: grid;
+  gap: 4px;
+  min-width: 132px;
+  max-width: min(300px, 80vw);
+  padding: 9px 12px;
+  border-radius: var(--d-radius);
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(20, 26, 61, 0.06), 0 16px 40px rgba(20, 26, 61, 0.18);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.dossier .chart-tip .t {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #293277;
+  margin-bottom: 2px;
+}
+.dossier .chart-tip .r {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.dossier .chart-tip .r b {
+  margin-left: auto;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #293277;
+}
+.dossier .chart-tip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+@media (max-width: 1023px) {
+  .dossier .chart-tip { max-width: calc(100vw - 24px); }
+}
+
 .dossier .note {
   font-size: 12px;
   color: #94a3b8;

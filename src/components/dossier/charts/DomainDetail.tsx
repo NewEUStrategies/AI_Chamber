@@ -10,6 +10,8 @@ import {
   type SearchTerm,
 } from '@/content/dossier/analytics';
 import { SERIES, plFormat, plPct } from './trafficPalette';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 function SplitBar({
   parts,
@@ -18,6 +20,7 @@ function SplitBar({
   parts: { label: string; pct: number }[];
   color: string;
 }) {
+  const tip = useChartTip();
   return (
     <div>
       <div className="flex h-3.5 gap-[2px] overflow-hidden rounded-full">
@@ -29,7 +32,10 @@ function SplitBar({
               width: `${p.pct}%`,
               background: i === 0 ? color : 'rgba(41, 50, 119, 0.12)',
             }}
-            title={`${p.label}: ${plPct(p.pct)}`}
+            onMouseEnter={(e) =>
+              tip.show(e, [{ label: 'udział', value: plPct(p.pct), color: i === 0 ? color : undefined }], p.label)
+            }
+            onMouseLeave={tip.hide}
           />
         ))}
       </div>
@@ -45,6 +51,7 @@ function SplitBar({
           </span>
         ))}
       </div>
+      <ChartTip tip={tip.tip} />
     </div>
   );
 }
@@ -53,11 +60,14 @@ function RankedBars({
   rows,
   color,
   emptyNote,
+  unit,
 }: {
   rows: { label: string; pct: number; note?: string }[];
   color: string;
   emptyNote?: string;
+  unit: string;
 }) {
+  const tip = useChartTip();
   if (rows.length === 0) return <p className="note">{emptyNote}</p>;
   const max = Math.max(...rows.map((r) => r.pct));
   return (
@@ -71,6 +81,10 @@ function RankedBars({
             <div
               className="h-full rounded-[4px] transition-[width] duration-700"
               style={{ width: `${Math.max((r.pct / max) * 100, 2)}%`, background: color }}
+              onMouseEnter={(e) =>
+                tip.show(e, [{ label: unit, value: plPct(r.pct), color }], r.label)
+              }
+              onMouseLeave={tip.hide}
             />
           </div>
           <span className="w-14 shrink-0 text-right text-[11px] font-bold tabular-nums text-slate-500">
@@ -79,6 +93,7 @@ function RankedBars({
           {r.note && <span className="w-16 shrink-0 text-right text-[10.5px] font-bold text-slate-400">{r.note}</span>}
         </div>
       ))}
+      <ChartTip tip={tip.tip} />
     </div>
   );
 }
@@ -182,7 +197,7 @@ export function DomainDetail({ which }: { which: 'chamber' | 'summit' }) {
       <div className="card">
         <h3>Geografia ruchu</h3>
         <div className="mt-4">
-          <RankedBars rows={countryRows(countries)} color={color} />
+          <RankedBars rows={countryRows(countries)} color={color} unit="udział w ruchu" />
         </div>
         {!isChamber && (
           <p className="note">
@@ -194,7 +209,7 @@ export function DomainDetail({ which }: { which: 'chamber' | 'summit' }) {
       <div className="card">
         <h3>Najczęstsze zapytania ogólne</h3>
         <div className="mt-4">
-          <RankedBars rows={termRows(terms)} color={color} emptyNote="Brak danych w raporcie." />
+          <RankedBars rows={termRows(terms)} color={color} emptyNote="Brak danych w raporcie." unit="udział w zapytaniach" />
         </div>
         <p className="note">Udział w zapytaniach organicznych spoza nazwy marki, sierpień 2026.</p>
       </div>

@@ -2,6 +2,8 @@ import { PL_POSITIONS, SEO_DERIVED } from '@/content/dossier/seo';
 import { plNum } from '@/content/dossier/analytics';
 import { Term } from '@/components/dossier/Term';
 import { SERIES } from './trafficPalette';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 const TOPIC: Record<string, { label: string; color: string; cls: string }> = {
   golf: { label: 'pole golfowe', color: '#b45309', cls: 'pill warn' },
@@ -16,6 +18,7 @@ const TOPIC: Record<string, { label: string; color: string; cls: string }> = {
 export function PlPositions() {
   const maxVol = Math.max(...PL_POSITIONS.map((p) => p.volume));
   const golfShare = Math.round((SEO_DERIVED.golfVolume / (SEO_DERIVED.golfVolume + SEO_DERIVED.aiVolume + 110)) * 100);
+  const tip = useChartTip();
 
   return (
     <div className="space-y-5">
@@ -61,6 +64,18 @@ export function PlPositions() {
                   <div
                     className="h-full rounded-[4px] transition-[width] duration-700"
                     style={{ width: `${Math.max((p.volume / maxVol) * 100, 2)}%`, background: TOPIC[p.topic].color }}
+                    onMouseEnter={(e) =>
+                      tip.show(
+                        e,
+                        [
+                          { label: 'wyszukiwań/mies.', value: plNum(p.volume) },
+                          { label: 'pozycja w Google', value: `poz. ${p.position}` },
+                          { label: 'wizyt/mies.', value: String(p.traffic) },
+                        ],
+                        p.keyword
+                      )
+                    }
+                    onMouseLeave={tip.hide}
                   />
                 </div>
                 <span className="w-16 shrink-0 text-right text-[11px] font-bold tabular-nums text-slate-500">
@@ -142,6 +157,8 @@ export function PlPositions() {
           </li>
         </ul>
       </div>
+
+      <ChartTip tip={tip.tip} />
     </div>
   );
 }

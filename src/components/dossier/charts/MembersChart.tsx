@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 interface Series {
   label: string;
@@ -23,6 +25,7 @@ const TICKS = [0, 200, 400, 600, 800];
  */
 export function MembersChart() {
   const [mounted, setMounted] = useState(false);
+  const tip = useChartTip();
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
@@ -67,7 +70,17 @@ export function MembersChart() {
                       : 'bg-sky-500/70'
                   }`}
                   style={{ width: mounted ? `${Math.max((d.value / MAX) * 100, 2)}%` : '0%' }}
-                  title={`${d.label}: ${d.display} — ${d.note}`}
+                  onMouseEnter={(e) =>
+                    tip.show(
+                      e,
+                      [
+                        { label: 'członkowie', value: d.display },
+                        { label: 'źródło', value: d.note },
+                      ],
+                      d.label
+                    )
+                  }
+                  onMouseLeave={tip.hide}
                 />
               </div>
               <span
@@ -96,6 +109,8 @@ export function MembersChart() {
           </div>
         </div>
       </div>
+
+      <ChartTip tip={tip.tip} />
     </div>
   );
 }

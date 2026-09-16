@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 interface Node {
   id: string;
@@ -30,6 +32,7 @@ const LEGEND = [
 /** Organisational map of AI Chamber, drawn in the platform palette. */
 export function StructureGraph() {
   const [active, setActive] = useState<string | null>(null);
+  const tip = useChartTip();
   const center = NODES[0];
 
   return (
@@ -82,8 +85,15 @@ export function StructureGraph() {
           return (
             <g
               key={n.id}
-              onMouseEnter={() => setActive(n.id)}
-              onMouseLeave={() => setActive(null)}
+              onMouseEnter={(e) => {
+                setActive(n.id);
+                tip.show(
+                  e,
+                  [{ label: 'opis', value: n.sub }],
+                  n.title.join(' ')
+                );
+              }}
+              onMouseLeave={tip.hide}
               className="cursor-default"
             >
               <circle
@@ -142,6 +152,8 @@ export function StructureGraph() {
           </span>
         ))}
       </div>
+
+      <ChartTip tip={tip.tip} />
     </div>
   );
 }

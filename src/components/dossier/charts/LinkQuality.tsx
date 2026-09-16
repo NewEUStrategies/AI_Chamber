@@ -9,6 +9,8 @@ import {
 import { plNum } from '@/content/dossier/analytics';
 import { Term } from '@/components/dossier/Term';
 import { INK, SERIES, plPct } from './trafficPalette';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 /** Buckets at or below 10 are the junk end of the profile. */
 const WEAK = '0–10';
@@ -16,12 +18,15 @@ const WEAK = '0–10';
 function Bars({
   rows,
   accent,
+  title,
 }: {
   rows: { label: string; value: number; count: number; weak?: boolean }[];
   accent: string;
+  title: string;
 }) {
   const max = Math.max(...rows.map((r) => r.value));
   const [hover, setHover] = useState<string | null>(null);
+  const tip = useChartTip();
   return (
     <div className="space-y-2.5">
       {rows.map((r) => (
@@ -39,6 +44,17 @@ function Bars({
                 width: `${Math.max((r.value / max) * 100, 1.5)}%`,
                 background: r.weak ? '#b45309' : accent,
               }}
+              onMouseEnter={(e) =>
+                tip.show(
+                  e,
+                  [
+                    { label: 'udział', value: plPct(r.value) },
+                    { label: 'liczba', value: `${plNum(r.count)}` },
+                  ],
+                  `${title}: ${r.label}`
+                )
+              }
+              onMouseLeave={tip.hide}
             />
           </div>
           <span
@@ -50,12 +66,14 @@ function Bars({
           </span>
         </div>
       ))}
+      <ChartTip tip={tip.tip} />
     </div>
   );
 }
 
 /** Quality of the referring-domain profile: authority, TLD and origin. */
 export function LinkQuality() {
+  const tip = useChartTip();
   return (
     <div className="space-y-5">
       <div className="card">
@@ -70,6 +88,7 @@ export function LinkQuality() {
         <div className="mt-5">
           <Bars
             accent={SERIES.chamber}
+            title="Domeny według Authority Score"
             rows={AS_DISTRIBUTION.map((b) => ({
               label: b.range,
               value: b.pct,
@@ -92,6 +111,7 @@ export function LinkQuality() {
           <div className="mt-4">
             <Bars
               accent={SERIES.summit}
+              title="Końcówki domen"
               rows={TLD_SPLIT.map((t) => ({
                 label: t.tld,
                 value: t.pct,
@@ -111,6 +131,7 @@ export function LinkQuality() {
           <div className="mt-4">
             <Bars
               accent={SERIES.chamber}
+              title="Kraje domen odsyłających"
               rows={LINK_COUNTRIES.map((c) => ({ label: c.country, value: c.pct, count: c.domains }))}
             />
           </div>
@@ -139,10 +160,21 @@ export function LinkQuality() {
                 width: `${a.pct}%`,
                 background: i === 0 ? SERIES.summit : i === 1 ? 'rgba(41,50,119,0.18)' : INK.dim,
               }}
-              title={`${a.label}: ${plNum(a.count)} (${plPct(a.pct)})`}
+              onMouseEnter={(e) =>
+                tip.show(
+                  e,
+                  [
+                    { label: 'udział', value: plPct(a.pct) },
+                    { label: 'linki', value: plNum(a.count) },
+                  ],
+                  a.label
+                )
+              }
+              onMouseLeave={tip.hide}
             />
           ))}
         </div>
+        <ChartTip tip={tip.tip} />
         <table className="data" style={{ marginTop: '14px' }}>
           <thead>
             <tr>

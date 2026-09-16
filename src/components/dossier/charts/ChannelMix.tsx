@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { CHANNELS } from '@/content/dossier/analytics';
 import { SERIES, plPct } from './trafficPalette';
+import { ChartTip } from './ChartTip';
+import { useChartTip } from './useChartTip';
 
 const MAX = 40;
 
@@ -12,6 +14,7 @@ const SERIES_DEF = [
 /** Marketing-channel mix for both properties — grouped bars on one shared scale. */
 export function ChannelMix() {
   const [hover, setHover] = useState<string | null>(null);
+  const tip = useChartTip();
 
   return (
     <figure className="m-0">
@@ -46,6 +49,14 @@ export function ChannelMix() {
                       <div
                         className="h-full rounded-[4px] transition-[width] duration-700"
                         style={{ width: `${Math.max((value / MAX) * 100, 1)}%`, background: s.color }}
+                        onMouseEnter={(e) =>
+                          tip.show(
+                            e,
+                            [{ label: 'udział w ruchu', value: plPct(value), color: s.color }],
+                            `${c.label} — ${s.label}`
+                          )
+                        }
+                        onMouseLeave={tip.hide}
                       />
                     </div>
                     <span
@@ -62,6 +73,8 @@ export function ChannelMix() {
           </div>
         ))}
       </div>
+
+      <ChartTip tip={tip.tip} />
 
       <details className="mt-5 text-xs">
         <summary className="cursor-pointer font-bold text-slate-500 hover:text-chamber-green-deep">
