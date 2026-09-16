@@ -5,7 +5,6 @@ import { StatTile } from '@/components/marketing/primitives';
 import { ROLES } from '@/content/stanowiska/roles';
 import {
   ACCESS_DATE,
-  HIRING_ORDER,
   SOURCES,
   SPECIALIST_ROLES,
   UNDER_PRESSURE,
@@ -214,40 +213,6 @@ function Overview({ onPick }: { onPick: (k: (typeof ROLES)[number]['key']) => vo
         </ul>
       </section>
 
-      <section className="rounded-[14px] border border-slate-200 bg-white p-5 shadow-card sm:p-6">
-        <h2 className="font-display text-[17px] font-extrabold leading-tight text-chamber-navy">
-          Kogo zatrudnić najpierw
-        </h2>
-        <p className="mt-1.5 max-w-3xl text-[13px] leading-[1.65] text-slate-600">
-          Kolejność, nie ranking ważności. Każdy kolejny etat domyka lukę, którą poprzednia obsada zostawiała
-          otwartą — a koszt pod spodem liczy się z widełek rekomendowanych.
-        </p>
-        <ul className="mt-4 space-y-2.5">
-          {HIRING_ORDER.map((h) => {
-            const from = h.roles.reduce((a, k) => a + (ROLES.find((r) => r.key === k)?.pay.izba[0] ?? 0), 0);
-            const to = h.roles.reduce((a, k) => a + (ROLES.find((r) => r.key === k)?.pay.izba[1] ?? 0), 0);
-            return (
-              <li key={h.fte} className="flex gap-3 rounded-[10px] border border-slate-200 px-3.5 py-3">
-                <span
-                  className="mt-[1px] flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-white"
-                  style={{ background: CAT[1] }}
-                >
-                  {h.fte}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                    <span className="text-[12.5px] font-extrabold text-chamber-navy">{h.what}</span>
-                    <span className="font-mono text-[10.5px] font-bold tabular-nums text-slate-400">
-                      {plInt(from)}–{plInt(to)} zł / mies.
-                    </span>
-                  </span>
-                  <span className="mt-1 block text-[12px] leading-[1.6] text-slate-600">{h.why}</span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
     </div>
   );
 }
