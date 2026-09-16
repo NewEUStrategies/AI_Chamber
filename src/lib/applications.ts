@@ -1,7 +1,11 @@
 import { supabase } from '@/lib/supabase';
 import type { MembershipApplication } from '@/lib/types';
 
+const NOT_CONFIGURED =
+  'Baza rekrutacji nie jest podłączona — ustaw VITE_SUPABASE_URL i VITE_SUPABASE_ANON_KEY.';
+
 export async function fetchApplications(): Promise<MembershipApplication[]> {
+  if (!supabase) throw new Error(NOT_CONFIGURED);
   const { data, error } = await supabase
     .from('membership_applications')
     .select('*')
@@ -14,6 +18,7 @@ export async function updateApplication(
   id: string,
   patch: Partial<Pick<MembershipApplication, 'status' | 'score' | 'reviewer' | 'notes'>>
 ): Promise<void> {
+  if (!supabase) throw new Error(NOT_CONFIGURED);
   const { error } = await supabase
     .from('membership_applications')
     .update({ ...patch, updated_at: new Date().toISOString() })
@@ -22,6 +27,7 @@ export async function updateApplication(
 }
 
 export async function deleteApplication(id: string): Promise<void> {
+  if (!supabase) throw new Error(NOT_CONFIGURED);
   const { error } = await supabase.from('membership_applications').delete().eq('id', id);
   if (error) throw new Error(error.message);
 }

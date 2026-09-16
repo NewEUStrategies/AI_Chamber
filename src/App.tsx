@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { LayoutDashboard, Table2, TriangleAlert, LoaderCircle } from 'lucide-react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
+import { BookText, LayoutDashboard, Table2, TriangleAlert, LoaderCircle } from 'lucide-react';
 import type { ApplicationStatus, MembershipApplication } from '@/lib/types';
 import { fetchApplications, updateApplication, deleteApplication } from '@/lib/applications';
 import { ChamberLogo } from '@/components/ChamberLogo';
@@ -7,7 +7,12 @@ import { DashboardView } from '@/components/DashboardView';
 import { ApplicationsView } from '@/components/ApplicationsView';
 import { ApplicationDrawer } from '@/components/ApplicationDrawer';
 
-type View = 'dashboard' | 'applications';
+// The dossier ships ~320 kB of prose; keep it out of the initial bundle.
+const DossierView = lazy(() =>
+  import('@/components/dossier/DossierView').then((m) => ({ default: m.DossierView }))
+);
+
+type View = 'dashboard' | 'applications' | 'dossier';
 
 export default function App() {
   const [view, setView] = useState<View>('dashboard');
@@ -73,18 +78,21 @@ export default function App() {
   const nav: { key: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'dashboard', label: 'Pulpit', icon: LayoutDashboard },
     { key: 'applications', label: 'Aplikacje', icon: Table2 },
+    { key: 'dossier', label: 'Dossier', icon: BookText },
   ];
 
   return (
     <div className="min-h-screen chamber-grid">
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-          <ChamberLogo />
-          <nav className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1">
+          <ChamberLogo className="h-6 max-w-[35vw] object-contain object-left sm:h-8" />
+          <nav className="flex shrink-0 items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1">
             {nav.map((item) => (
               <button
                 key={item.key}
                 onClick={() => setView(item.key)}
+                aria-label={item.label}
+                aria-current={view === item.key ? 'page' : undefined}
                 className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-bold transition-all duration-200 ${
                   view === item.key
                     ? 'bg-chamber-navy text-white shadow-md shadow-chamber-navy/20'
@@ -100,7 +108,7 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        {error && (
+        {error && view !== 'dossier' && (
           <div className="card mb-6 flex items-start gap-3 border-rose-200 bg-rose-50 p-4">
             <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />
             <div className="flex-1">
@@ -113,11 +121,12 @@ export default function App() {
           </div>
         )}
 
-        {loading ? (
-          <div className="flex flex-col items-center gap-3 py-24 text-slate-400">
-            <LoaderCircle className="h-8 w-8 animate-spin text-chamber-green-deep" />
-            <p className="text-sm font-semibold">Ładowanie danych rekrutacji…</p>
-          </div>
+        {view === 'dossier' ? (
+          <Suspense fallback={<ViewLoader label="Ładowanie dossier…" />}>
+            <DossierView />
+          </Suspense>
+        ) : loading ? (
+          <ViewLoader label="Ładowanie danych rekrutacji…" />
         ) : apps.length === 0 && !error ? (
           <div className="card mx-auto max-w-lg p-10 text-center">
             <p className="font-display text-xl font-extrabold text-chamber-navy">Brak aplikacji w bazie</p>
@@ -144,7 +153,7 @@ export default function App() {
       </main>
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs font-semibold text-slate-400">
-        AI Chamber CEE · Kokpit rekrutacji
+        AI Chamber CEE · Kokpit rekrutacji i dossier rozpoznawcze
       </footer>
 
       {selected && (
@@ -158,6 +167,15 @@ export default function App() {
           onDelete={handleDelete}
         />
       )}
+    </div>
+  );
+}
+
+function ViewLoader({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-3 py-24 text-slate-400">
+      <LoaderCircle className="h-8 w-8 animate-spin text-chamber-green-deep" />
+      <p className="text-sm font-semibold">{label}</p>
     </div>
   );
 }
