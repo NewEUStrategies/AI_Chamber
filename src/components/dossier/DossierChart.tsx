@@ -14,6 +14,11 @@ import { GlossaryPanel } from '@/components/dossier/charts/GlossaryPanel';
 import { LinkQuality } from '@/components/dossier/charts/LinkQuality';
 import { PlPositions } from '@/components/dossier/charts/PlPositions';
 import { SeoHealth } from '@/components/dossier/charts/SeoHealth';
+import { FormatImpact } from '@/components/dossier/charts/FormatImpact';
+import { PostLedger } from '@/components/dossier/charts/PostLedger';
+import { SocialCockpit } from '@/components/dossier/charts/SocialCockpit';
+import { SocialGlossary } from '@/components/dossier/charts/SocialGlossary';
+import { VisualSystem } from '@/components/dossier/charts/VisualSystem';
 
 /** Components that bring their own card frame. */
 const SELF_FRAMED: DossierComponent[] = [
@@ -29,6 +34,11 @@ const SELF_FRAMED: DossierComponent[] = [
   'pl-positions',
   'ai-prompts',
   'glossary-panel',
+  'social-cockpit',
+  'post-ledger',
+  'format-impact',
+  'visual-system',
+  'social-glossary',
 ];
 
 const COMPONENTS: Record<DossierComponent, FC> = {
@@ -47,6 +57,11 @@ const COMPONENTS: Record<DossierComponent, FC> = {
   'pl-positions': PlPositions,
   'ai-prompts': AiPrompts,
   'glossary-panel': GlossaryPanel,
+  'social-cockpit': SocialCockpit,
+  'post-ledger': PostLedger,
+  'format-impact': FormatImpact,
+  'visual-system': VisualSystem,
+  'social-glossary': SocialGlossary,
 };
 
 /** Charts and panels that replace or extend the source document's figures. */
