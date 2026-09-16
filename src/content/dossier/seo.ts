@@ -113,6 +113,16 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     full: 'Wolumen wyszukiwań',
     body: 'Średnia liczba wyszukiwań danej frazy miesięcznie w wybranym kraju.',
   },
+  'wyszukiwania miesięczne': {
+    full: 'Wyszukiwania miesięczne (2 400/mies.)',
+    body: 'Ile razy miesięcznie ludzie wpisują daną frazę w Google w Polsce. Mierzy wielkość zainteresowania frazą, ale nie mówi nic o tym, czy domena izby pokazuje się w wynikach ani jak wysoko.',
+    reading: 'Duży wolumen ma znaczenie tylko przy wysokiej pozycji — „golf park józefów" ma 2 400 wyszukiwań, ale izba jest na pozycji 14, z której praktycznie nikt nie klika.',
+  },
+  pozycja: {
+    full: 'Pozycja w wynikach (poz. 14)',
+    body: 'Miejsce, na którym domena izby pojawia się w bezpłatnych wynikach Google dla danej frazy. Pozycje 1–3 zbierają zdecydowaną większość kliknięć; od około 10 w dół ruch praktycznie zanika.',
+    reading: 'Pozycje 14, 18, 20 i 56 to miejsca, których nikt nie widzi — sama obecność w wynikach bez wysokiej pozycji nie przynosi wizyt.',
+  },
   disavow: {
     full: 'Plik disavow',
     body: 'Lista domen zgłaszana do Google Search Console z prośbą o zignorowanie prowadzących z nich linków. Standardowe narzędzie obrony przed śmieciowym profilem linkowym.',

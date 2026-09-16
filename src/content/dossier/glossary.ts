@@ -39,6 +39,8 @@ export const GLOSSARY_ORDER: string[] = [
   'negatywne SEO',
   'ruch organiczny',
   'wolumen',
+  'wyszukiwania miesięczne',
+  'pozycja',
   'CPC',
   'TSK',
   'intencja',

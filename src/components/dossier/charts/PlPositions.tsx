@@ -29,11 +29,15 @@ export function PlPositions() {
           <div className="l">wizyt miesięcznie z tych fraz łącznie</div>
         </div>
         <div className="metric cyan">
-          <div className="n">{plNum(SEO_DERIVED.golfVolume)}</div>
+          <div className="n">
+            <Term k="wyszukiwania miesięczne">{plNum(SEO_DERIVED.golfVolume)}</Term>
+          </div>
           <div className="l">miesięcznych wyszukiwań fraz golfowych</div>
         </div>
         <div className="metric">
-          <div className="n">{plNum(SEO_DERIVED.aiVolume)}</div>
+          <div className="n">
+            <Term k="wyszukiwania miesięczne">{plNum(SEO_DERIVED.aiVolume)}</Term>
+          </div>
           <div className="l">miesięcznych wyszukiwań fraz o AI</div>
         </div>
       </div>
@@ -60,10 +64,10 @@ export function PlPositions() {
                   />
                 </div>
                 <span className="w-16 shrink-0 text-right text-[11px] font-bold tabular-nums text-slate-500">
-                  {plNum(p.volume)}/mies.
+                  <Term k="wyszukiwania miesięczne">{plNum(p.volume)}/mies.</Term>
                 </span>
                 <span className="w-14 shrink-0 text-right text-[11px] font-bold tabular-nums text-chamber-navy">
-                  poz. {p.position}
+                  <Term k="pozycja">poz. {p.position}</Term>
                 </span>
               </div>
             ))}
@@ -74,11 +78,15 @@ export function PlPositions() {
             <thead>
               <tr>
                 <th>Fraza</th>
-                <th>Pozycja</th>
+                <th>
+                  <Term k="pozycja">Pozycja</Term>
+                </th>
                 <th>
                   <Term k="wolumen">Wolumen</Term>
                 </th>
-                <th>Ruch</th>
+                <th>
+                  <Term k="wyszukiwania miesięczne">Ruch</Term>
+                </th>
                 <th>Adres docelowy</th>
                 <th>Temat</th>
               </tr>
