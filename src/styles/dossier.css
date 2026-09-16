@@ -115,6 +115,12 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
+/* grid children default to min-width:auto, which lets a wide table push the
+   whole page sideways — pin them to the track instead. */
+.dossier .grid2 > *,
+.dossier .grid3 > * {
+  min-width: 0;
+}
 
 /* ---------- chart frame ---------- */
 .dossier .chart-card {
@@ -702,9 +708,28 @@
   .dossier sup.fn .fc::before { display: none; }
 }
 
+/* Footnote panels are laid out even while hidden, so a marker near the right
+   edge widened the document and produced a stray horizontal scrollbar. `clip`
+   removes that contribution without creating a scroll container, and the clip
+   margin still lets an open panel paint outside the column. */
+.dossier-content {
+  overflow-x: clip;
+  overflow-clip-margin: 240px;
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 1024px) {
   .dossier .metrics.c5 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  /* let a pill break rather than push the line out */
+  .dossier .pill {
+    white-space: normal;
+  }
+  .dossier .matters li,
+  .dossier .chip {
+    overflow-wrap: anywhere;
+  }
 }
 @media (max-width: 767px) {
   .dossier .metrics.c3,
@@ -724,5 +749,47 @@
   .dossier *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- inline data tables behind a disclosure ---------- */
+.dossier details > summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  transition: color 0.15s;
+}
+.dossier details > summary::-webkit-details-marker {
+  display: none;
+}
+.dossier details > summary::before {
+  content: '▸';
+  font-size: 10px;
+  color: #00875d;
+  transition: transform 0.15s;
+}
+.dossier details[open] > summary::before {
+  transform: rotate(90deg);
+}
+.dossier details:focus-visible,
+.dossier details > summary:focus-visible {
+  outline: 2px solid #01de99;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Narrow screens: let wide data tables scroll instead of pushing the page out. */
+@media (max-width: 767px) {
+  .dossier table.data {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .dossier table.data td,
+  .dossier table.data th {
+    white-space: normal;
+    min-width: 96px;
   }
 }

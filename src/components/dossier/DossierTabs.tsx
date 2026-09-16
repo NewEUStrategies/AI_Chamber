@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { DossierTab } from '@/content/dossier';
-import { DossierHtml } from '@/components/dossier/DossierHtml';
+import { DossierBlocks } from '@/components/dossier/DossierBlocks';
 
 /** Tab group, styled after the platform's pill navigation. */
 export function DossierTabs({ group, tabs }: { group: string; tabs: DossierTab[] }) {
@@ -56,7 +56,7 @@ export function DossierTabs({ group, tabs }: { group: string; tabs: DossierTab[]
         aria-labelledby={`tab-${tabs[active].id}`}
         className="mt-6 animate-fade-up"
       >
-        <DossierHtml html={tabs[active].html} />
+        <DossierBlocks blocks={tabs[active].blocks ?? [{ kind: 'html', html: tabs[active].html ?? '' }]} />
       </div>
     </div>
   );

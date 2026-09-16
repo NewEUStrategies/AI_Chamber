@@ -1,13 +1,44 @@
+import type { FC } from 'react';
 import type { DossierComponent } from '@/content/dossier';
+import { ChannelMix } from '@/components/dossier/charts/ChannelMix';
+import { DomainDetail } from '@/components/dossier/charts/DomainDetail';
+import { DomainFlow } from '@/components/dossier/charts/DomainFlow';
 import { MembersChart } from '@/components/dossier/charts/MembersChart';
 import { StructureGraph } from '@/components/dossier/charts/StructureGraph';
+import { SummitSpeakers } from '@/components/dossier/charts/SummitSpeakers';
+import { TrafficCockpit } from '@/components/dossier/charts/TrafficCockpit';
+import { TrafficTimeline } from '@/components/dossier/charts/TrafficTimeline';
 
-/** Charts that replaced the source document's inline SVGs. */
+/** Components that bring their own card frame. */
+const SELF_FRAMED: DossierComponent[] = [
+  'structure-graph',
+  'domain-flow',
+  'domain-detail-chamber',
+  'domain-detail-summit',
+  'summit-speakers',
+  'traffic-cockpit',
+];
+
+const COMPONENTS: Record<DossierComponent, FC> = {
+  'structure-graph': StructureGraph,
+  'members-chart': MembersChart,
+  'traffic-cockpit': TrafficCockpit,
+  'traffic-timeline': TrafficTimeline,
+  'channel-mix': ChannelMix,
+  'domain-flow': DomainFlow,
+  'domain-detail-chamber': () => <DomainDetail which="chamber" />,
+  'domain-detail-summit': () => <DomainDetail which="summit" />,
+  'summit-speakers': SummitSpeakers,
+};
+
+/** Charts and panels that replace or extend the source document's figures. */
 export function DossierChart({ name, caption }: { name: DossierComponent; caption?: string }) {
-  if (name === 'structure-graph') return <StructureGraph />;
+  const Component = COMPONENTS[name];
+  if (!Component) return null;
+  if (SELF_FRAMED.includes(name) && !caption) return <Component />;
   return (
-    <div className="card p-6 sm:p-7">
-      <MembersChart />
+    <div className={SELF_FRAMED.includes(name) ? undefined : 'card p-6 sm:p-7'}>
+      <Component />
       {caption && <p className="note" dangerouslySetInnerHTML={{ __html: caption }} />}
     </div>
   );

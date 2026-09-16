@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookMarked, CornerUpLeft } from 'lucide-react';
 import { DOSSIER_GROUPS, DOSSIER_PAGES } from '@/content/dossier';
-import { DossierChart } from '@/components/dossier/DossierChart';
+import { DossierBlocks } from '@/components/dossier/DossierBlocks';
 import { DossierHtml } from '@/components/dossier/DossierHtml';
-import { DossierTabs } from '@/components/dossier/DossierTabs';
 
 const SOURCES_PAGE = 'zrodla';
 const HIGHLIGHT_MS = 3200;
@@ -142,7 +141,7 @@ export function DossierView() {
         </div>
       </aside>
 
-      <div className="min-w-0 flex-1">
+      <div className="dossier-content min-w-0 flex-1">
         <div
           ref={contentRef}
           key={page.id}
@@ -191,22 +190,12 @@ export function DossierView() {
             </button>
           )}
 
-          <div className="space-y-6">
-            {page.blocks.map((block, i) =>
-              block.kind === 'tabs' ? (
-                <DossierTabs key={`${block.group}-${i}`} group={block.group} tabs={block.tabs} />
-              ) : block.kind === 'component' ? (
-                <DossierChart key={i} name={block.name} caption={block.caption} />
-              ) : (
-                <DossierHtml key={i} html={block.html} />
-              )
-            )}
-          </div>
+          <DossierBlocks blocks={page.blocks} />
         </div>
 
         <nav className="mt-10 flex items-stretch justify-between gap-3 border-t border-slate-200 pt-6">
           {prev ? (
-            <button onClick={() => goTo(prev.id)} className="group card flex items-center gap-3 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <button onClick={() => goTo(prev.id)} className="group card flex min-w-0 max-w-[48%] items-center gap-3 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
               <ArrowLeft className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-chamber-green-deep" />
               <span className="min-w-0">
                 <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
@@ -219,7 +208,7 @@ export function DossierView() {
             <span />
           )}
           {next && (
-            <button onClick={() => goTo(next.id)} className="group card ml-auto flex items-center gap-3 px-4 py-3 text-right transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <button onClick={() => goTo(next.id)} className="group card ml-auto flex min-w-0 max-w-[48%] items-center gap-3 px-4 py-3 text-right transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
               <span className="min-w-0">
                 <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
                   Następna

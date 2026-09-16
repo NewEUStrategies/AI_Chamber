@@ -5,13 +5,25 @@
  * from `src/styles/dossier.css`, which re-skins that markup in platform colours.
  */
 
-/** A chart rendered as a React component instead of the source document's SVG. */
-export type DossierComponent = 'structure-graph' | 'members-chart';
+/** A chart or panel rendered as a React component instead of static markup. */
+export type DossierComponent =
+  | 'structure-graph'
+  | 'members-chart'
+  | 'traffic-cockpit'
+  | 'traffic-timeline'
+  | 'channel-mix'
+  | 'domain-flow'
+  | 'domain-detail-chamber'
+  | 'domain-detail-summit'
+  | 'summit-speakers';
 
 export interface DossierTab {
   id: string;
   label: string;
-  html: string;
+  /** Ported markup. Ignored when `blocks` is set. */
+  html?: string;
+  /** Hand-written tabs mix markup and React panels. */
+  blocks?: DossierBlock[];
 }
 
 export type DossierBlock =

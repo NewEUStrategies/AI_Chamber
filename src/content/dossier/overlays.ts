@@ -1,3 +1,4 @@
+import { TRAFFIC_PAGES } from './pages-traffic';
 import type { DossierBlock, DossierPage } from './types';
 
 /**
@@ -136,7 +137,11 @@ const ENTRY_34 =
 const NEW_ENTRIES = `${ENTRY_34}
           <span class="g">Dokumenty członkowskie i korporacyjne</span>
           <div class="i" id="zrodlo-35" data-src="35"><span class="n">35.</span><span class="t">AI Chamber, „Membership Application” - formularz członkowski, 2026 r. - jednorazowa opłata rejestracyjna 20 EUR oraz składki roczne BASIC 150 EUR, PRO 500 EUR i PREMIUM 1 500 EUR; wybór waluty PLN albo EUR; progi zatrudnienia 1-5, 6-50, 51-250 i powyżej 250 osób. <em>M1</em></span></div>
-          <div class="i" id="zrodlo-36" data-src="36"><span class="n">36.</span><span class="t">Statut „AI Chamber”, wersja angielska, 2026 r. - art. 1 (podstawa prawna: ustawa z 30 maja 1989 r. o izbach gospodarczych), art. 3 ust. 2, art. 7-9, art. 11 pkt 11, art. 21 oraz art. 22. <em>M1</em></span></div>`;
+          <div class="i" id="zrodlo-36" data-src="36"><span class="n">36.</span><span class="t">Statut „AI Chamber”, wersja angielska, 2026 r. - art. 1 (podstawa prawna: ustawa z 30 maja 1989 r. o izbach gospodarczych), art. 3 ust. 2, art. 7-9, art. 11 pkt 11, art. 21 oraz art. 22. <em>M1</em></span></div>
+          <span class="g">Dane o ruchu w sieci</span>
+          <div class="i" id="zrodlo-37" data-src="37"><span class="n">37.</span><span class="t">SimilarWeb, „Website Analysis: aichamber.eu”, raport za okres marzec-sierpień 2026, odczyt 16 września 2026 r. - ruch, zaangażowanie, kanały pozyskania, geografia i wyszukiwarka. <em>M2</em></span></div>
+          <div class="i" id="zrodlo-38" data-src="38"><span class="n">38.</span><span class="t">SimilarWeb, „Website Analysis: ceeaisummit.eu”, raport za okres marzec-sierpień 2026, odczyt 16 września 2026 r. - ruch, zaangażowanie, kanały pozyskania, geografia i wyszukiwarka. <em>M2</em></span></div>
+          <div class="i" id="zrodlo-39" data-src="39"><span class="n">39.</span><span class="t">ceeaisummit.eu, zapowiedź prelegentów CEE AI Summit 2026 - odczyt z podglądu strony zamieszczonego w raporcie SimilarWeb, sierpień 2026 r. <em>M2</em></span></div>`;
 
 /* ------------------------------------------------------------------ */
 
@@ -303,7 +308,7 @@ export const DOSSIER_PATCHES: DossierPatch[] = [
     pageId: 'zrodla',
     find: 'Trzydzieści cztery pozycje w zapisie chicagowskim, ponumerowane na stałe i pogrupowane według rodzaju źródła.',
     replace:
-      'Trzydzieści sześć pozycji w zapisie chicagowskim, ponumerowanych na stałe i pogrupowanych według rodzaju źródła.',
+      'Trzydzieści dziewięć pozycji w zapisie chicagowskim, ponumerowanych na stałe i pogrupowanych według rodzaju źródła.',
     reason: 'Dopisane pozycje 35 i 36.',
   },
   {
@@ -345,7 +350,9 @@ function applyPatches(page: DossierPage): DossierPage {
       else if (block.kind === 'component' && block.caption)
         block.caption = patchHtml(block.caption, patch, hits);
       else if (block.kind === 'tabs')
-        block.tabs = block.tabs.map((t) => ({ ...t, html: patchHtml(t.html, patch, hits) }));
+        block.tabs = block.tabs.map((t) =>
+          t.html == null ? t : { ...t, html: patchHtml(t.html, patch, hits) }
+        );
     }
     const expected = patch.count ?? 1;
     if (hits.n !== expected) {
@@ -363,7 +370,7 @@ function applyPatches(page: DossierPage): DossierPage {
 }
 
 export function applyOverlays(pages: DossierPage[]): DossierPage[] {
-  return pages.map((page) => {
+  const patched = pages.map((page) => {
     const patched = applyPatches(page);
     const overlays = DOSSIER_OVERLAYS.filter((o) => o.pageId === patched.id);
     if (overlays.length === 0) return patched;
@@ -375,4 +382,6 @@ export function applyOverlays(pages: DossierPage[]): DossierPage[] {
     for (const overlay of ordered) blocks.splice(overlay.at ?? blocks.length, 0, ...overlay.blocks);
     return { ...patched, blocks };
   });
+  // Hand-written pages that were never part of the source document.
+  return [...patched, ...TRAFFIC_PAGES];
 }
